@@ -18,22 +18,28 @@ import com.simonyan.pl.util.FragmentTransactionManager;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener {
+
     // ===========================================================
     // Constants
     // ===========================================================
+
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     // ===========================================================
     // Fields
     // ===========================================================
+
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
     // ===========================================================
     // Constructors
     // ===========================================================
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
+
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================
@@ -74,6 +80,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     // ===========================================================
     // Other Listeners, methods for/from Interfaces
     // ===========================================================
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -109,6 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     // ===========================================================
     // Click Listeners
     // ===========================================================
+
     @Override
     public void onClick(View v) {
     }
@@ -116,6 +124,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     // ===========================================================
     // Methods
     // ===========================================================
+
     private void setListeners() {
         mNavigationView.setNavigationItemSelectedListener(this);
     }

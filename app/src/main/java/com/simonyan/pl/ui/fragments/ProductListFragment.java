@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.simonyan.pl.R;
+import com.simonyan.pl.io.rest.HttpRequestManager;
+import com.simonyan.pl.io.service.PLIntentService;
 import com.simonyan.pl.util.Constant;
 
 public class ProductListFragment extends BaseFragment implements View.OnClickListener {
@@ -60,6 +62,12 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         getData();
         customizeActionBar();
+        PLIntentService.start(
+                getActivity(),
+                this.getClass().getSimpleName(),
+                "https://s3-eu-west-1.amazonaws.com/developer-application-test/cart/list",
+                HttpRequestManager.RequestType.PRODUCT_LIST
+        );
         return view;
     }
 
