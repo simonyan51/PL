@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
                 );
 
+
                 break;
 
             case R.id.nav_about:
@@ -150,9 +152,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         actionBarDrawerToggle.syncState();
     }
 
-    private void openScreen(Fragment fragment, int item, boolean mustToAddToBackStack) {
+    private void openScreen(Fragment fragment, final int item, boolean mustToAddToBackStack) {
 
         mNavigationView.getMenu().findItem(item).setChecked(true);
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                mNavigationView.getMenu().findItem(item).setChecked(true);
+
+            }
+        });
 
         FragmentTransactionManager.displayFragment(
                 getSupportFragmentManager(),
@@ -162,6 +172,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
         );
 
     }
+
 
     // ===========================================================
     // Inner and Anonymous Classes

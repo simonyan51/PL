@@ -87,6 +87,8 @@ public class RestHttpClient {
         }
         return httpConnection;
     }
+
+
     private static void handleFailedConnection(Context context, String url, HttpConnection httpConnection,
                                                HttpURLConnection httpURLConnection, Exception e) {
         if (httpURLConnection != null) {
