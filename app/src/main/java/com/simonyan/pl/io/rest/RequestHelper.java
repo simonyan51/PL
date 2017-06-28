@@ -1,10 +1,6 @@
 package com.simonyan.pl.io.rest;
 
-import android.util.Log;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -70,10 +66,11 @@ public class RequestHelper {
             connection.setRequestMethod(type);
             switch (type) {
                 case RequestMethod.GET:
+
                     break;
                 case RequestMethod.POST:
                     connection.setDoInput(true);
-                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
                     break;
                 case RequestMethod.PUT:
                     break;
@@ -83,18 +80,7 @@ public class RequestHelper {
             connection.setUseCaches(false);
             connection.connect();
 
-            InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
-            BufferedReader reader = new BufferedReader(streamReader);
-            StringBuilder stringBuilder = new StringBuilder();
-            String inputLine;
-            while ((inputLine = reader.readLine()) != null) {
-                stringBuilder.append(inputLine);
-            }
-            reader.close();
-            streamReader.close();
-
-            String result = stringBuilder.toString();
-            Log.d(LOG_TAG, result);
+            String result = ParsingDataHelper.parseHttpRequest(connection);
 
         } catch (IOException e) {
             connection.disconnect();
