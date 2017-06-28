@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 public class Product {
 
     @SerializedName("product_id")
-    private int id;
+    private String id;
 
     @SerializedName("name")
     private String name;
@@ -22,18 +22,18 @@ public class Product {
     }
 
     public Product(int id, String name, int price, String image) {
-        this.id = id;
+        this.id = String.format("%d", id);
         this.name = name;
         this.price = price;
         this.image = image;
     }
 
     public int getId() {
-        return id;
+        return Integer.parseInt(id);
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id = String.format("%d", id);
     }
 
     public String getName() {

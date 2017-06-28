@@ -4,10 +4,17 @@ package com.simonyan.pl.io.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
-import com.simonyan.pl.io.rest.RequestHelper;
+import com.google.gson.Gson;
+import com.simonyan.pl.db.entity.Product;
+import com.simonyan.pl.db.entity.ProductResponse;
+import com.simonyan.pl.io.rest.HttpRequestManager;
+import com.simonyan.pl.io.rest.HttpResponseUtil;
 import com.simonyan.pl.util.Constant;
-import com.simonyan.pl.util.Logger;
+
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
 
 public class PLIntentService extends IntentService {
 
@@ -52,23 +59,20 @@ public class PLIntentService extends IntentService {
      * @param url         - calling api url
      * @param requestType - string constant that helps us to distinguish what request it is
      * @param postEntity  - POST request entity (json string that must be sent on server)
-     * @param subscriber  - object(class) that started service
      */
 
-    public static void start(Context context, String subscriber, String url, String postEntity,
+    public static void start(Context context, String url, String postEntity,
                              int requestType) {
         Intent intent = new Intent(context, PLIntentService.class);
-        intent.putExtra(Extra.SUBSCRIBER, subscriber);
         intent.putExtra(Extra.URL, url);
         intent.putExtra(Extra.REQUEST_TYPE, requestType);
         intent.putExtra(Extra.POST_ENTITY, postEntity);
         context.startService(intent);
     }
 
-    public static void start(Context context, String subscriber, String url,
+    public static void start(Context context, String url,
                              int requestType) {
         Intent intent = new Intent(context, PLIntentService.class);
-        intent.putExtra(Extra.SUBSCRIBER, subscriber);
         intent.putExtra(Extra.URL, url);
         intent.putExtra(Extra.REQUEST_TYPE, requestType);
         context.startService(intent);
@@ -82,11 +86,29 @@ public class PLIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String url = intent.getExtras().getString(Extra.URL);
         String data = intent.getExtras().getString(Extra.POST_ENTITY);
-        String subscriber = intent.getExtras().getString(Extra.SUBSCRIBER);
         int requestType = intent.getExtras().getInt(Extra.REQUEST_TYPE);
-        Logger.i(LOG_TAG, requestType + Constant.Symbol.SPACE + url);
+        Log.i(LOG_TAG, requestType + Constant.Symbol.SPACE + url);
 
-        RequestHelper.makeRequest(RequestHelper.RequestMethod.POST, "https://s3-eu-west-1.amazonaws.com/developer-application-test/cart/5/detail");
+        switch (requestType) {
+            case HttpRequestManager.RequestType.PRODUCT_LIST:
+
+                HttpURLConnection connection = HttpRequestManager.executeRequest(
+                        url,
+                        HttpRequestManager.RequestMethod.GET,
+                        null
+                        );
+
+                String json = HttpResponseUtil.parseResponse(connection);
+                Log.i(LOG_TAG, json);
+                ProductResponse productResponse = new Gson().fromJson(json, ProductResponse.class);
+                ArrayList<Product> products = productResponse.getProducts();
+                Log.i(LOG_TAG, "Products amount " + products.size());
+                break;
+
+            case HttpRequestManager.RequestType.PRODUCT_ITEM:
+
+                break;
+        }
 
     }
 

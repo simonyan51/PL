@@ -5,11 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.simonyan.pl.R;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.service.PLIntentService;
 import com.simonyan.pl.util.Constant;
+import com.simonyan.pl.util.NetworkUtil;
 
 public class ProductListFragment extends BaseFragment implements View.OnClickListener {
 
@@ -62,12 +64,17 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         getData();
         customizeActionBar();
-        PLIntentService.start(
-                getActivity(),
-                this.getClass().getSimpleName(),
-                "https://s3-eu-west-1.amazonaws.com/developer-application-test/cart/list",
-                HttpRequestManager.RequestType.PRODUCT_LIST
-        );
+
+        if (NetworkUtil.getInstance().isConnected(view.getContext())) {
+            PLIntentService.start(
+                    getActivity(),
+                    Constant.API.URL,
+                    HttpRequestManager.RequestType.PRODUCT_LIST
+            );
+        } else {
+            Toast.makeText(view.getContext(), "Please, Check Network Connection", Toast.LENGTH_LONG).show();
+        }
+
         return view;
     }
 
