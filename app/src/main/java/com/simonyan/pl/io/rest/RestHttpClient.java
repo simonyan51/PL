@@ -70,22 +70,35 @@ public class RestHttpClient {
                 Logger.i(LOG_TAG, "Token: " + String.valueOf(token));
                 httpURLConnection.setRequestProperty(Header.AUTHORIZATION, TOKEN_VALUE + token);
             }
+
             httpURLConnection.setRequestMethod(RequestMethod.GET);
+
             httpURLConnection.setRequestProperty(Header.CONTENT_TYPE, PayloadType.APPLICATION_JSON);
+
             httpURLConnection.setRequestProperty(Header.ACCEPT_ENCODING, Constant.Symbol.NULL);
+
             httpURLConnection.setUseCaches(false);
+
             httpURLConnection.connect();
+
             Logger.i(LOG_TAG, "Server response: " + String.valueOf(httpURLConnection.getResponseCode())
                     + Constant.Symbol.SPACE + httpURLConnection.getResponseMessage());
+
             httpConnection.setHttpURLConnection(httpURLConnection);
+
             httpConnection.setHttpConnectionSucceeded(true);
+
             httpConnection.setHttpConnectionCode(httpURLConnection.getResponseCode());
+
             httpConnection.setHttpConnectionMessage(httpURLConnection.getResponseMessage());
+
         } catch (Exception e) {
             e.printStackTrace();
             handleFailedConnection(context, url, httpConnection, httpURLConnection, e);
         }
+
         return httpConnection;
+
     }
 
 

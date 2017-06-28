@@ -11,24 +11,31 @@ public class HttpRequestManager {
     // Constants
     // ===========================================================
     private static final String LOG_TAG = HttpRequestManager.class.getSimpleName();
+
     public class RequestType {
         public static final int PRODUCT_LIST = 1;
     }
+
     // ===========================================================
     // Fields
     // ===========================================================
+
     // ===========================================================
     // Constructors
     // ===========================================================
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
+
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
+
     // ===========================================================
     // Methods
     // ===========================================================
@@ -40,10 +47,15 @@ public class HttpRequestManager {
      */
     public static HttpConnection executeRequest(Context context, String requestMethod, String url,
                                                 String token, String postEntity) {
+
         Bundle bundle = new Bundle();
+
         bundle.putString(RestHttpClient.BundleData.JSON_ENTITY, postEntity);
+
         bundle.putString(RestHttpClient.BundleData.TOKEN, token);
+
         HttpConnection httpConnection = null;
+
         switch (requestMethod) {
 //            case RestHttpClient.RequestMethod.POST:
 //                httpConnection = RestHttpClient.executePostRequest(context, url, bundle);
@@ -61,10 +73,15 @@ public class HttpRequestManager {
 //                httpConnection = RestHttpClient.executeDeleteRequest(context, url, bundle);
 //                break;
         }
+
         httpConnection = HttpResponseUtil.handleConnection(httpConnection);
+
         return httpConnection;
+
     }
+
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
+
 }

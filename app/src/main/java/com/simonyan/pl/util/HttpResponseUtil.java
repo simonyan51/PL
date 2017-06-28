@@ -34,8 +34,11 @@ public class HttpResponseUtil {
     // Methods
     // ===========================================================
     public static HttpConnection handleConnection(HttpConnection httpConnection) {
+
         StringBuilder responseStrBuilder = new StringBuilder();
+
         HttpURLConnection httpURLConnection = httpConnection.getHttpURLConnection();
+
         if (httpURLConnection != null) {
             InputStream httpInputStream = null;
             InputStreamReader inputStreamReader = null;
@@ -117,7 +120,9 @@ public class HttpResponseUtil {
             private static final String E_TAG = "eTag";
             private static final String LAST_MODIFIED = "Last-Modified";
         }
+
         HttpResponseHeader httpResponseHeader = new HttpResponseHeader();
+
         try {
             int httpResponseCode = httpConnection.getHttpConnectionCode();
             String httpResponseMsg = httpConnection.getHttpConnectionMessage();
@@ -137,12 +142,17 @@ public class HttpResponseUtil {
                 httpResponseHeader.setHttpConnectionCode(httpResponseCode);
                 httpResponseHeader.setHttpConnectionMessage(httpResponseMsg);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return httpResponseHeader;
+
     }
+
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
+
 }
