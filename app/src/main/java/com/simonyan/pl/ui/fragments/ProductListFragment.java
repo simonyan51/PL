@@ -66,11 +66,18 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         customizeActionBar();
 
         if (NetworkUtil.getInstance().isConnected(view.getContext())) {
+//            PLIntentService.start(
+//                    getActivity(),
+//                    Constant.API.PRODUCT_LIST,
+//                    HttpRequestManager.RequestType.PRODUCT_LIST
+//            );
+
             PLIntentService.start(
                     getActivity(),
-                    Constant.API.URL,
-                    HttpRequestManager.RequestType.PRODUCT_LIST
+                    Constant.API.PRODUCT_ITEM,
+                    HttpRequestManager.RequestType.PRODUCT_ITEM
             );
+
         } else {
             Toast.makeText(view.getContext(), R.string.network_check, Toast.LENGTH_LONG).show();
         }

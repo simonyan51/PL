@@ -89,22 +89,39 @@ public class PLIntentService extends IntentService {
         int requestType = intent.getExtras().getInt(Extra.REQUEST_TYPE);
         Log.i(LOG_TAG, requestType + Constant.Symbol.SPACE + url);
 
+        HttpURLConnection connection;
+
         switch (requestType) {
             case HttpRequestManager.RequestType.PRODUCT_LIST:
 
-                HttpURLConnection connection = HttpRequestManager.executeRequest(
+                connection = HttpRequestManager.executeRequest(
                         url,
                         HttpRequestManager.RequestMethod.GET,
                         null
                         );
-                String json = HttpResponseUtil.parseResponse(connection);
-                Log.i(LOG_TAG, json);
-                ProductResponse productResponse = new Gson().fromJson(json, ProductResponse.class);
+
+                String jsonList = HttpResponseUtil.parseResponse(connection);
+
+                ProductResponse productResponse = new Gson().fromJson(jsonList, ProductResponse.class);
+
                 ArrayList<Product> products = productResponse.getProducts();
-                Log.i(LOG_TAG, "Products amount " + products.size());
+
+                // TODO: instert list into DB
                 break;
 
             case HttpRequestManager.RequestType.PRODUCT_ITEM:
+
+                connection = HttpRequestManager.executeRequest(
+                        url,
+                        HttpRequestManager.RequestMethod.GET,
+                        null
+                );
+
+                String jsonItem = HttpResponseUtil.parseResponse(connection);
+
+                Product product = new Gson().fromJson(jsonItem, Product.class);
+
+                //TODO: insert item into DB
 
                 break;
         }

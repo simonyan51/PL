@@ -1,5 +1,7 @@
 package com.simonyan.pl.io.rest;
 
+import com.simonyan.pl.util.Constant;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -27,13 +29,6 @@ public class HttpRequestManager {
         public static final String PUT = "PUT";
     }
 
-    public class Headers {
-        public static final String CONTENT_TYPE = "Content-Type";
-    }
-
-    public class Payloads {
-        public static final String APPLICATION_JSON = "application/json";
-    }
 
     public static HttpURLConnection executeRequest(String apiUrl, String requestMethod, String data) {
 
@@ -55,7 +50,7 @@ public class HttpRequestManager {
                 case RequestMethod.PUT:
                 case RequestMethod.POST:
 
-                    connection.setRequestProperty(Headers.CONTENT_TYPE, Payloads.APPLICATION_JSON);
+                    connection.setRequestProperty(Constant.Headers.CONTENT_TYPE, Constant.Payloads.APPLICATION_JSON);
                     connection.setDoInput(true);
                     connection.setDoOutput(true);
                     connection.connect();

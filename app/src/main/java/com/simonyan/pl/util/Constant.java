@@ -76,7 +76,16 @@ public class Constant {
 
     public class API {
 
-        public static final String URL = "https://s3-eu-west-1.amazonaws.com/developer-application-test/cart/list";
+        public static final String PRODUCT_LIST = "https://s3-eu-west-1.amazonaws.com/developer-application-test/cart/list";
+        public static final String PRODUCT_ITEM = "https://s3-eu-west-1.amazonaws.com/developer-application-test/cart/1/detail";
 
+    }
+
+    public class Headers {
+        public static final String CONTENT_TYPE = "Content-Type";
+    }
+
+    public class Payloads {
+        public static final String APPLICATION_JSON = "application/json";
     }
 }
