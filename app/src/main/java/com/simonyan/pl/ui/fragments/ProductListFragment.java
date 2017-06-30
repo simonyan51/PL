@@ -72,7 +72,7 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
                     HttpRequestManager.RequestType.PRODUCT_LIST
             );
         } else {
-            Toast.makeText(view.getContext(), "Please, Check Network Connection", Toast.LENGTH_LONG).show();
+            Toast.makeText(view.getContext(), R.string.network_check, Toast.LENGTH_LONG).show();
         }
 
         return view;

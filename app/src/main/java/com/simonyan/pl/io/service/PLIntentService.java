@@ -97,7 +97,6 @@ public class PLIntentService extends IntentService {
                         HttpRequestManager.RequestMethod.GET,
                         null
                         );
-
                 String json = HttpResponseUtil.parseResponse(connection);
                 Log.i(LOG_TAG, json);
                 ProductResponse productResponse = new Gson().fromJson(json, ProductResponse.class);
