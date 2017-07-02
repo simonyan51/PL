@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.entity.ProductResponse;
+import com.simonyan.pl.io.bus.BusProvider;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.rest.HttpResponseUtil;
 import com.simonyan.pl.util.Constant;
@@ -107,6 +108,9 @@ public class PLIntentService extends IntentService {
                 ArrayList<Product> products = productResponse.getProducts();
 
                 // TODO: instert list into DB
+
+                BusProvider.getInstance().post(products);
+
                 break;
 
             case HttpRequestManager.RequestType.PRODUCT_ITEM:
@@ -122,6 +126,7 @@ public class PLIntentService extends IntentService {
                 Product product = new Gson().fromJson(jsonItem, Product.class);
 
                 //TODO: insert item into DB
+                BusProvider.getInstance().post(product);
 
                 break;
         }
