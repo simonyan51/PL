@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.entity.ProductResponse;
+import com.simonyan.pl.db.handler.PlQueryHandler;
 import com.simonyan.pl.io.bus.BusProvider;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.rest.HttpResponseUtil;
@@ -26,7 +27,7 @@ public class PLIntentService extends IntentService {
     private static final String LOG_TAG = PLIntentService.class.getSimpleName();
 
     private class Extra {
-        static final String URL = "URL";
+        static final String URL = "PRODUCT_LIST";
         static final String POST_ENTITY = "POST_ENTITY";
         static final String SUBSCRIBER = "SUBSCRIBER";
         static final String REQUEST_TYPE = "REQUEST_TYPE";
@@ -62,8 +63,7 @@ public class PLIntentService extends IntentService {
      * @param postEntity  - POST request entity (json string that must be sent on server)
      */
 
-    public static void start(Context context, String url, String postEntity,
-                             int requestType) {
+    public static void start(Context context, String url, String postEntity, int requestType) {
         Intent intent = new Intent(context, PLIntentService.class);
         intent.putExtra(Extra.URL, url);
         intent.putExtra(Extra.REQUEST_TYPE, requestType);
@@ -71,8 +71,7 @@ public class PLIntentService extends IntentService {
         context.startService(intent);
     }
 
-    public static void start(Context context, String url,
-                             int requestType) {
+    public static void start(Context context, String url, int requestType) {
         Intent intent = new Intent(context, PLIntentService.class);
         intent.putExtra(Extra.URL, url);
         intent.putExtra(Extra.REQUEST_TYPE, requestType);
@@ -99,15 +98,18 @@ public class PLIntentService extends IntentService {
                         url,
                         HttpRequestManager.RequestMethod.GET,
                         null
-                        );
+                );
 
                 String jsonList = HttpResponseUtil.parseResponse(connection);
+                Log.d(LOG_TAG, jsonList);
 
                 ProductResponse productResponse = new Gson().fromJson(jsonList, ProductResponse.class);
-
                 ArrayList<Product> products = productResponse.getProducts();
 
-                // TODO: instert list into DB
+                PlQueryHandler.addProducts(
+                        this,
+                        products
+                );
 
                 BusProvider.getInstance().post(products);
 
@@ -122,13 +124,14 @@ public class PLIntentService extends IntentService {
                 );
 
                 String jsonItem = HttpResponseUtil.parseResponse(connection);
+                Log.d(LOG_TAG, jsonItem);
 
                 Product product = new Gson().fromJson(jsonItem, Product.class);
 
-                //TODO: insert item into DB
                 BusProvider.getInstance().post(product);
 
                 break;
+
         }
 
     }
