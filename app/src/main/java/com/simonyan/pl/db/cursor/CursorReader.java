@@ -62,6 +62,7 @@ public class CursorReader {
     }
 
     public static ArrayList<Product> parseProducts(Cursor cursor) {
+
         ArrayList<Product> userArrayList = new ArrayList<>();
         if (cursor != null && !cursor.isClosed() && cursor.moveToFirst()) {
             do {
@@ -75,6 +76,7 @@ public class CursorReader {
             cursor.close();
         }
         return userArrayList;
+
     }
 
     /**
