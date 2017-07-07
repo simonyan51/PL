@@ -7,7 +7,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,6 +33,7 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private SwipeRefreshLayout mRefreshLayout;
 
     // ===========================================================
     // Constructors
@@ -127,6 +130,7 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
     private void findViews() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main);
         mNavigationView = (NavigationView) findViewById(R.id.nav_main);
+        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sr_fragment_proudct_list_swipe);
     }
 
     private void customizeActionBar() {
@@ -157,6 +161,15 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
 
         );
 
+    }
+
+    private void refresh() {
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(LOG_TAG, "Tag");
+            }
+        });
     }
 
     // ===========================================================

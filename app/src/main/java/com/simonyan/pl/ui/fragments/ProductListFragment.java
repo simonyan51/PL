@@ -2,6 +2,8 @@ package com.simonyan.pl.ui.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,6 +43,8 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
 
     private ProductAdapter mProductAdapter;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -79,8 +83,12 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         getData();
         customizeActionBar();
+        fetchData();
+        return view;
+    }
 
-        if (NetworkUtil.getInstance().isConnected(view.getContext())) {
+    private void fetchData() {
+        if (NetworkUtil.getInstance().isConnected(getContext())) {
             PLIntentService.start(
                     getActivity(),
                     Constant.API.PRODUCT_LIST,
@@ -94,10 +102,8 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
             );
 
         } else {
-            Toast.makeText(view.getContext(), R.string.network_check, Toast.LENGTH_LONG).show();
+            Snackbar.make(getActivity().findViewById(R.id.dl_main), "Not connection", Snackbar.LENGTH_LONG).show();
         }
-
-        return view;
     }
 
     @Override
@@ -134,14 +140,22 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
 
     private void setListeners() {
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchData();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
     }
 
     private void findViews(View view) {
         mRvProductListRecycler = (RecyclerView) view.findViewById(R.id.rv_fragment_proudct_list_recycler);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sr_fragment_proudct_list_swipe);
     }
 
     private void implementRecyclerView() {
-
         mRvProductListRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mProductAdapter = new ProductAdapter(products, new ProductAdapter.OnItemClickListener() {
