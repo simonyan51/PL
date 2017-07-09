@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.simonyan.pl.R;
 import com.simonyan.pl.db.entity.Product;
 
@@ -116,7 +117,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         void bindData() {
 
 
-            Glide.with(itemView.getContext()).load(productArrayList.get(getAdapterPosition()).getImage()).into(ivProductImage);
+            Glide.with(itemView.getContext())
+                    .load(productArrayList.get(getAdapterPosition()).getImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivProductImage);
 
             tvProductTitle.setText(productArrayList.get(getAdapterPosition()).getName());
 
@@ -128,12 +132,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                     onItemClickListener.onItemClick(productArrayList.get(getAdapterPosition()));
                 }
             });
+
+            llItemContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onLongItemClick(productArrayList.get(getAdapterPosition()));
+                    return false;
+                }
+            });
         }
     }
 
     public interface OnItemClickListener {
 
         void onItemClick(Product product);
+        void onLongItemClick(Product product);
 
     }
 }

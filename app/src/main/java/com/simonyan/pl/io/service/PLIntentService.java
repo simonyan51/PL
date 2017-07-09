@@ -29,7 +29,6 @@ public class PLIntentService extends IntentService {
     private class Extra {
         static final String URL = "PRODUCT_LIST";
         static final String POST_ENTITY = "POST_ENTITY";
-        static final String SUBSCRIBER = "SUBSCRIBER";
         static final String REQUEST_TYPE = "REQUEST_TYPE";
     }
 
@@ -101,15 +100,13 @@ public class PLIntentService extends IntentService {
                 );
 
                 String jsonList = HttpResponseUtil.parseResponse(connection);
-                Log.d(LOG_TAG, jsonList);
 
                 ProductResponse productResponse = new Gson().fromJson(jsonList, ProductResponse.class);
                 ArrayList<Product> products = productResponse.getProducts();
 
-                PlQueryHandler.addProducts(
-                        this,
-                        products
-                );
+                PlQueryHandler.deleteProducts(this);
+
+                PlQueryHandler.addProducts(this, products);
 
                 BusProvider.getInstance().post(products);
 
@@ -124,12 +121,8 @@ public class PLIntentService extends IntentService {
                 );
 
                 String jsonItem = HttpResponseUtil.parseResponse(connection);
-                Log.d(LOG_TAG, jsonItem);
 
                 Product product = new Gson().fromJson(jsonItem, Product.class);
-
-                BusProvider.getInstance().post(product);
-
                 break;
 
         }

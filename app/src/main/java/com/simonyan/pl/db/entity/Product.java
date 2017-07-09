@@ -2,7 +2,9 @@ package com.simonyan.pl.db.entity;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
 
+@Parcel
 public class Product {
 
     @SerializedName("product_id")
@@ -22,6 +24,15 @@ public class Product {
 
     public Product() {
 
+    }
+
+    public Product(String id, String name, String description, int price, String image) {
+
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.image = image;
     }
 
     public String getId() {
@@ -64,12 +75,15 @@ public class Product {
         this.image = image;
     }
 
-    public Product(String id, String name, String description, int price, String image) {
-
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.image = image;
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                '}';
     }
+
 }

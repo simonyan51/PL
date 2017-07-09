@@ -86,16 +86,16 @@ public class PlQueryHandler {
 
     public synchronized static Product getProduct(Context context, long id) {
         Cursor cursor = context.getContentResolver().query(
-                UriBuilder.buildProductUri(),
+                UriBuilder.buildProductUri(id),
                 PlDataBase.Projection.PRODUCT,
-                PlDataBase.PRODUCT_ID + "=?",
-                new String[]{String.valueOf(id)},
+                null,
+                null,
                 null
         );
         return CursorReader.parseProduct(cursor);
     }
 
-    public synchronized static ArrayList<Product> getProduct(Context context) {
+    public synchronized static ArrayList<Product> getProducts(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 UriBuilder.buildProductUri(),
                 PlDataBase.Projection.PRODUCT,

@@ -20,4 +20,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="network_check">Please, Check Network Connection</string>
+    <string name="hint_product_price">Enter product price</string>
+    <string name="hint_product_name">Enter product name</string>
+    <string name="hint_product_description">Enter product description</string>
+    <string name="btn_text_add_product">Add Product</string>
+    <string name="action_add_product">Add Product</string>
+    <string name="name_error">Please, Fill The Name</string>
+    <string name="price_error">Please, Fill The Price</string>
+    <string name="desc_error">Please, Fill The Description</string>
 </resources>

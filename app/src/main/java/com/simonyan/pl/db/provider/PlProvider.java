@@ -96,7 +96,7 @@ public class PlProvider extends ContentProvider {
             case Code.SINGLE_PRODUCT:
             case Code.ALL_PRODUCTS:
                 id = db.insertWithOnConflict(PlDataBase.PRODUCT_TABLE, null, values,
-                        SQLiteDatabase.CONFLICT_REPLACE);
+                        SQLiteDatabase.CONFLICT_NONE);
                 contentUri = ContentUris.withAppendedId(UriBuilder.buildProductUri(), id);
                 break;
 
