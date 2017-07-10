@@ -49,7 +49,8 @@ public class AddProductActivity extends BaseActivity implements
     private TextInputLayout mIlProductDesc;
 
     private Button mBtnProductAdd;
-    private Product mProduct;
+
+    private PlAsyncQueryHandler handler;
 
     // ===========================================================
     // Constructors
@@ -66,6 +67,7 @@ public class AddProductActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        init();
         findViews();
         customizeActionBar();
     }
@@ -85,7 +87,9 @@ public class AddProductActivity extends BaseActivity implements
         int id = item.getItemId();
 
         switch (id) {
-
+            case android.R.id.home:
+                finish();
+                break;
         }
 
         return true;
@@ -119,7 +123,7 @@ public class AddProductActivity extends BaseActivity implements
         switch (token) {
             case PlAsyncQueryHandler.QueryToken.ADD_PRODUCT:
                 Intent result = new Intent();
-                result.putExtra(NEW_PRODUCT, Parcels.wrap(mProduct));
+                result.putExtra(NEW_PRODUCT, Parcels.wrap((Product) cookie));
                 setResult(RESULT_OK, result);
                 finish();
                 break;
@@ -161,6 +165,10 @@ public class AddProductActivity extends BaseActivity implements
         mBtnProductAdd.setOnClickListener(this);
     }
 
+    private void init() {
+        handler = new PlAsyncQueryHandler(getApplicationContext(), this);
+    }
+
     private void customizeActionBar() {
         setActionBarTitle(getString(R.string.action_add_product));
     }
@@ -171,17 +179,18 @@ public class AddProductActivity extends BaseActivity implements
             return;
         }
 
-        mProduct = new Product();
-        mProduct.setId("" + System.currentTimeMillis());
-        mProduct.setImage(mIvProductImage.getBackground().toString());
-        mProduct.setName(mEtProductName.getText().toString());
-        mProduct.setPrice(Integer.parseInt(mEtProductPrice.getText().toString()));
-        mProduct.setDescription(mEtProductDesc.getText().toString());
+        Product product = new Product();
+
+        product.setId("" + System.currentTimeMillis());
+        product.setImage(mIvProductImage.getBackground().toString());
+        product.setName(mEtProductName.getText().toString());
+        product.setPrice(Integer.parseInt(mEtProductPrice.getText().toString()));
+        product.setDescription(mEtProductDesc.getText().toString());
 
 
-        PlAsyncQueryHandler handler = new PlAsyncQueryHandler(getApplicationContext(), this);
 
-        handler.addProduct(mProduct);
+
+        handler.addProduct(product);
     }
 
     private boolean validate() {

@@ -1,5 +1,7 @@
 package com.simonyan.pl.ui.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -67,6 +69,7 @@ public class ProductListFragment extends BaseFragment implements
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -129,6 +132,27 @@ public class ProductListFragment extends BaseFragment implements
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.act_product_add:
+                startAddProductActivity();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onItemClick(Product product) {
+
+    }
+
+    @Override
+    public void onLongItemClick(Product product) {
+        showDialog(product);
+    }
+
     // ===========================================================
     // Other Listeners, methods for/from Interfaces
     // ===========================================================
@@ -160,6 +184,13 @@ public class ProductListFragment extends BaseFragment implements
     @Override
     public void onDeleteComplete(int token, Object cookie, int result) {
 
+        switch (token) {
+            case PlAsyncQueryHandler.QueryToken.DELETE_PRODUCT:
+                mProducts.remove(mProducts.indexOf((Product) cookie));
+                mProductAdapter.notifyDataSetChanged();
+                break;
+        }
+
     }
 
     @Subscribe
@@ -176,17 +207,6 @@ public class ProductListFragment extends BaseFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.act_product_add:
-                startAddProductActivity();
-                break;
-        }
-        return true;
-    }
-
-    @Override
      public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_CODE) {
@@ -199,15 +219,6 @@ public class ProductListFragment extends BaseFragment implements
 
     }
 
-    @Override
-    public void onItemClick(Product product) {
-
-    }
-
-    @Override
-    public void onLongItemClick(Product product) {
-
-    }
 
     // ===========================================================
     // Methods
@@ -284,6 +295,31 @@ public class ProductListFragment extends BaseFragment implements
         this.startActivityForResult(intent, REQUEST_CODE);
     }
 
+
+    private void showDialog(final Product product) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.product_delete_title)
+                .setMessage(getString(R.string.delete_question) + " " + product.getName() + "?")
+                .setPositiveButton(R.string.yes_value, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteProduct(product);
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.cancel_value, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteProduct(Product product) {
+        mTlAsyncQueryHandler.deleteProduct(product);
+    }
 
 
     // ===========================================================

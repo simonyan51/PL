@@ -147,7 +147,7 @@ public class PlAsyncQueryHandler extends AsyncQueryHandler {
     public synchronized void addProduct(Product product) {
         startInsert(
                 QueryToken.ADD_PRODUCT,
-                null,
+                product,
                 UriBuilder.buildProductUri(),
                 PlDataBase.composeValues(product, PlDataBase.PRODUCT_TABLE)
         );
@@ -167,7 +167,7 @@ public class PlAsyncQueryHandler extends AsyncQueryHandler {
     public synchronized void deleteProduct(Product product) {
         startDelete(
                 QueryToken.DELETE_PRODUCT,
-                null,
+                product,
                 UriBuilder.buildProductUri(),
                 PlDataBase.PRODUCT_ID + "=?",
                 new String[]{String.valueOf(product.getId())}

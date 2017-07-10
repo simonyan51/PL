@@ -28,4 +28,8 @@
     <string name="name_error">Please, Fill The Name</string>
     <string name="price_error">Please, Fill The Price</string>
     <string name="desc_error">Please, Fill The Description</string>
+    <string name="product_delete_title">Delete Product</string>
+    <string name="yes_value">Yes</string>
+    <string name="cancel_value">Cancel</string>
+    <string name="delete_question">Are you sure to delete</string>
 </resources>

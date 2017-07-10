@@ -31,7 +31,6 @@
 
         <activity
             android:name=".ui.activities.AddProductActivity"
-            android:windowSoftInputMode="adjustResize"
             ></activity>
     </application>
 
