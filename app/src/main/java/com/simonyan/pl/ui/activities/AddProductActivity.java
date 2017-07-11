@@ -36,6 +36,7 @@ public class AddProductActivity extends BaseActivity implements
 
 
     private ImageView mIvProductImage;
+
     private EditText mEtProductName;
 
     private TextInputLayout mIlProductName;
@@ -50,7 +51,7 @@ public class AddProductActivity extends BaseActivity implements
 
     private Button mBtnProductAdd;
 
-    private PlAsyncQueryHandler handler;
+    private PlAsyncQueryHandler mTlAsyncQueryHandler;
 
     // ===========================================================
     // Constructors
@@ -166,7 +167,7 @@ public class AddProductActivity extends BaseActivity implements
     }
 
     private void init() {
-        handler = new PlAsyncQueryHandler(getApplicationContext(), this);
+        mTlAsyncQueryHandler = new PlAsyncQueryHandler(getApplicationContext(), this);
     }
 
     private void customizeActionBar() {
@@ -190,7 +191,7 @@ public class AddProductActivity extends BaseActivity implements
 
 
 
-        handler.addProduct(product);
+        mTlAsyncQueryHandler.addProduct(product);
     }
 
     private boolean validate() {

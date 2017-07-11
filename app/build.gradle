@@ -31,8 +31,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:support-v4:25.3.1'
-    testCompile 'junit:junit:4.12'
-    debugCompile 'com.amitshekhar.android:debug-db:0.2.0'
     compile 'org.parceler:parceler-api:1.1.7'
+    testCompile 'junit:junit:4.12'
     annotationProcessor 'org.parceler:parceler:1.1.7'
+    debugCompile 'com.amitshekhar.android:debug-db:0.2.0'
 }

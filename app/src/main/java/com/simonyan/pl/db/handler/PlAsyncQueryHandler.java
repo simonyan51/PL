@@ -156,7 +156,7 @@ public class PlAsyncQueryHandler extends AsyncQueryHandler {
     public synchronized void updateProduct(Product product) {
         startUpdate(
                 QueryToken.UPDATE_PRODUCT,
-                null,
+                product,
                 UriBuilder.buildProductUri(),
                 PlDataBase.composeValues(product, PlDataBase.PRODUCT_TABLE),
                 PlDataBase.PRODUCT_ID + "=?",

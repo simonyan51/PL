@@ -123,6 +123,11 @@ public class PLIntentService extends IntentService {
                 String jsonItem = HttpResponseUtil.parseResponse(connection);
 
                 Product product = new Gson().fromJson(jsonItem, Product.class);
+
+                PlQueryHandler.updateProduct(getApplicationContext(), product);
+
+                BusProvider.getInstance().post(product);
+
                 break;
 
         }

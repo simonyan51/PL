@@ -29,9 +29,8 @@
             android:name=".io.service.PLIntentService"
             android:exported="false" />
 
-        <activity
-            android:name=".ui.activities.AddProductActivity"
-            ></activity>
+        <activity android:name=".ui.activities.AddProductActivity" />
+        <activity android:name=".ui.activities.ProductActivity"></activity>
     </application>
 
 </manifest>

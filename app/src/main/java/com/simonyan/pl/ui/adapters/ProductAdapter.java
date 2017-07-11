@@ -93,10 +93,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvProductTitle;
-        TextView tvProductPrice;
-        ImageView ivProductImage;
-        LinearLayout llItemContainer;
+        TextView mTvProductTitle;
+        TextView mTvProductPrice;
+        ImageView mIvProductImage;
+        LinearLayout mLlItemContainer;
         OnItemClickListener onItemClickListener;
         ArrayList<Product> productArrayList;
 
@@ -108,10 +108,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         }
 
         void findViews(View view) {
-            llItemContainer = (LinearLayout) view.findViewById(R.id.ll_product_item_container);
-            tvProductTitle = (TextView) view.findViewById(R.id.tv_product_item_title);
-            tvProductPrice = (TextView) view.findViewById(R.id.tv_product_item_price);
-            ivProductImage = (ImageView) view.findViewById(R.id.iv_product_item_logo);
+            mLlItemContainer = (LinearLayout) view.findViewById(R.id.ll_product_item_container);
+            mTvProductTitle = (TextView) view.findViewById(R.id.tv_product_item_title);
+            mTvProductPrice = (TextView) view.findViewById(R.id.tv_product_item_price);
+            mIvProductImage = (ImageView) view.findViewById(R.id.iv_product_item_logo);
         }
 
         void bindData() {
@@ -120,20 +120,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
             Glide.with(itemView.getContext())
                     .load(productArrayList.get(getAdapterPosition()).getImage())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(ivProductImage);
+                    .into(mIvProductImage);
 
-            tvProductTitle.setText(productArrayList.get(getAdapterPosition()).getName());
+            mTvProductTitle.setText(productArrayList.get(getAdapterPosition()).getName());
 
-            tvProductPrice.setText(String.valueOf(productArrayList.get(getAdapterPosition()).getPrice()));
+            mTvProductPrice.setText(String.valueOf(productArrayList.get(getAdapterPosition()).getPrice()));
 
-            llItemContainer.setOnClickListener(new View.OnClickListener() {
+            mLlItemContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onItemClick(productArrayList.get(getAdapterPosition()));
                 }
             });
 
-            llItemContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            mLlItemContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     onItemClickListener.onLongItemClick(productArrayList.get(getAdapterPosition()));

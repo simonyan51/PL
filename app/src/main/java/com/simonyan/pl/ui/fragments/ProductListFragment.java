@@ -29,6 +29,7 @@ import com.simonyan.pl.io.bus.BusProvider;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.service.PLIntentService;
 import com.simonyan.pl.ui.activities.AddProductActivity;
+import com.simonyan.pl.ui.activities.ProductActivity;
 import com.simonyan.pl.ui.adapters.ProductAdapter;
 import com.simonyan.pl.util.Constant;
 import com.simonyan.pl.util.NetworkUtil;
@@ -50,7 +51,8 @@ public class ProductListFragment extends BaseFragment implements
     // ===========================================================
 
     private static final String LOG_TAG = ProductListFragment.class.getSimpleName();
-    private static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_ADD = 1;
+    private static final int REQUEST_CODE_PRODUCT = 2;
 
 
     // ===========================================================
@@ -145,7 +147,7 @@ public class ProductListFragment extends BaseFragment implements
 
     @Override
     public void onItemClick(Product product) {
-
+        startProductActivity(product);
     }
 
     @Override
@@ -209,12 +211,20 @@ public class ProductListFragment extends BaseFragment implements
     @Override
      public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Product newProduct = Parcels.unwrap(data.getParcelableExtra(NEW_PRODUCT));
-                mProducts.add(newProduct);
-                mProductAdapter.notifyDataSetChanged();
-            }
+        switch (requestCode) {
+            case REQUEST_CODE_ADD:
+                if (resultCode == RESULT_OK) {
+                    Product newProduct = Parcels.unwrap(data.getParcelableExtra(NEW_PRODUCT));
+                    mProducts.add(newProduct);
+                    mProductAdapter.notifyDataSetChanged();
+                }
+                break;
+            case REQUEST_CODE_PRODUCT:
+                if (resultCode == RESULT_OK) {
+
+                    mProductAdapter.notifyDataSetChanged();
+                }
+                break;
         }
 
     }
@@ -240,17 +250,14 @@ public class ProductListFragment extends BaseFragment implements
 
 
         if (NetworkUtil.getInstance().isConnected(getContext())) {
+
+            mTlAsyncQueryHandler.deleteProducts();
+
             PLIntentService.start(
                     getActivity(),
                     Constant.API.PRODUCT_LIST,
                     HttpRequestManager.RequestType.PRODUCT_LIST
             );
-
-//            PLIntentService.start(
-//                    getActivity(),
-//                    Constant.API.PRODUCT_ITEM,
-//                    HttpRequestManager.RequestType.PRODUCT_ITEM
-//            );
 
         } else {
 
@@ -292,7 +299,18 @@ public class ProductListFragment extends BaseFragment implements
 
     private void startAddProductActivity() {
         Intent intent = new Intent(getActivity(), AddProductActivity.class);
-        this.startActivityForResult(intent, REQUEST_CODE);
+        this.startActivityForResult(intent, REQUEST_CODE_ADD);
+    }
+
+    private void startProductActivity(Product product) {
+
+        if (NetworkUtil.getInstance().isConnected(getContext())) {
+            Intent intent = new Intent(getActivity(), ProductActivity.class);
+            intent.putExtra("product_id", product.getId());
+            this.startActivity(intent);
+        } else {
+            Snackbar.make(getActivity().findViewById(R.id.dl_main), R.string.msg_network_connection_error, Snackbar.LENGTH_LONG).show();
+        }
     }
 
 
