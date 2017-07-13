@@ -9,11 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            layout="@layout/include_toolbar"/>
+        <include layout="@layout/include_toolbar"/>
 
     </android.support.design.widget.AppBarLayout>
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,10 +32,12 @@
                 android:scaleType="centerCrop"/>
 
             <LinearLayout
-                android:id="@+id/ll_product_details"
-                android:orientation="vertical"
+                android:id="@+id/ll_product_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/tv_product_title"
@@ -63,57 +63,42 @@
                     android:textColor="@android:color/black"/>
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_product_edit"
-                android:visibility="gone"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/et_product_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_product_name"
-                        android:maxLength="25"
-                        android:maxLines="1"
-                        android:layout_marginBottom="5dp"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="@android:color/black"/>
-                </android.support.design.widget.TextInputLayout>
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/et_product_price"
-                        android:layout_width="match_parent"
-                        android:hint="@string/hint_product_price"
-                        android:inputType="number"
-                        android:maxLength="9"
-                        android:maxLines="1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="@android:color/black"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
 
-                </android.support.design.widget.TextInputLayout>
-                <android.support.design.widget.TextInputLayout
+                <EditText
+                    android:id="@+id/et_product_title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/et_product_desc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_product_description"
-                        android:textAppearance="?android:textAppearanceMedium"
-                        android:textColor="@android:color/black"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textColor="@android:color/black"/>
 
-                </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/et_product_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:inputType="number"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@android:color/black"/>
+
+                <EditText
+                    android:id="@+id/et_product_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@android:color/black"/>
+
             </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
-
 </LinearLayout>

@@ -16,8 +16,6 @@ import com.simonyan.pl.R;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.handler.PlAsyncQueryHandler;
 
-import org.parceler.Parcels;
-
 public class AddProductActivity extends BaseActivity implements 
         OnClickListener, 
         PlAsyncQueryHandler.AsyncQueryListener {
@@ -28,6 +26,7 @@ public class AddProductActivity extends BaseActivity implements
 
     private static final String LOG_TAG = AddProductActivity.class.getSimpleName();
     public static final String NEW_PRODUCT = "New Product";
+    private static final String PRODUCT_IMAGE = "http://3.bp.blogspot.com/_RTP7jI1D1mQ/S2BAxTEvMdI/AAAAAAAAAIw/5oN5pgLTADE/s320/D%C3%BCnyan%C4%B1n+en+mutsuz+bal%C4%B1%C4%9F%C4%B1,+EN+UMUTSUZ+BALI%C4%9EI+da+oldu+.jpg";
 
 
     // ===========================================================
@@ -70,6 +69,7 @@ public class AddProductActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         init();
         findViews();
+        setListeners();
         customizeActionBar();
     }
 
@@ -124,7 +124,7 @@ public class AddProductActivity extends BaseActivity implements
         switch (token) {
             case PlAsyncQueryHandler.QueryToken.ADD_PRODUCT:
                 Intent result = new Intent();
-                result.putExtra(NEW_PRODUCT, Parcels.wrap((Product) cookie));
+                result.putExtra(NEW_PRODUCT, (Product) cookie);
                 setResult(RESULT_OK, result);
                 finish();
                 break;
@@ -149,7 +149,7 @@ public class AddProductActivity extends BaseActivity implements
 
     private void findViews() {
         mIvProductImage = (ImageView) findViewById(R.id.iv_activity_add_product_image);
-        mIvProductImage.setOnClickListener(this);
+
         mEtProductName = (EditText) findViewById(R.id.et_activity_add_product_name);
 
         mIlProductName = (TextInputLayout) findViewById(R.id.il_activity_add_product_name);
@@ -182,8 +182,8 @@ public class AddProductActivity extends BaseActivity implements
 
         Product product = new Product();
 
-        product.setId("" + System.currentTimeMillis());
-        product.setImage(mIvProductImage.getBackground().toString());
+        product.setId(System.currentTimeMillis());
+        product.setImage(PRODUCT_IMAGE);
         product.setName(mEtProductName.getText().toString());
         product.setPrice(Integer.parseInt(mEtProductPrice.getText().toString()));
         product.setDescription(mEtProductDesc.getText().toString());
@@ -192,6 +192,10 @@ public class AddProductActivity extends BaseActivity implements
 
 
         mTlAsyncQueryHandler.addProduct(product);
+    }
+
+    private void setListeners() {
+        mIvProductImage.setOnClickListener(this);
     }
 
     private boolean validate() {

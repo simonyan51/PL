@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.simonyan.pl.db.PlDataBase;
 import com.simonyan.pl.db.entity.Product;
+import com.simonyan.pl.util.AppUtil;
 
 import java.util.ArrayList;
 
@@ -62,7 +63,6 @@ public class CursorReader {
     }
 
     public static ArrayList<Product> parseProducts(Cursor cursor) {
-
         ArrayList<Product> userArrayList = new ArrayList<>();
         if (cursor != null && !cursor.isClosed() && cursor.moveToFirst()) {
             do {
@@ -76,7 +76,6 @@ public class CursorReader {
             cursor.close();
         }
         return userArrayList;
-
     }
 
     /**
@@ -85,11 +84,13 @@ public class CursorReader {
 
     private static Product composeProduct(Cursor cursor) {
         Product product = new Product();
-        product.setId(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_ID)));
+        product.setId(cursor.getLong(cursor.getColumnIndex(PlDataBase.PRODUCT_ID)));
         product.setName(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_NAME)));
         product.setImage(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_IMAGE)));
+        product.setFavorite(AppUtil.intToBoolean(cursor.getInt(cursor.getColumnIndex(PlDataBase.PRODUCT_FAVORITE))));
+        product.setUserProduct(AppUtil.intToBoolean(cursor.getInt(cursor.getColumnIndex(PlDataBase.PRODUCT_USER))));
         product.setDescription(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_DESCRIPTION)));
-        product.setPrice(cursor.getInt(cursor.getColumnIndex(PlDataBase.PRODUCT_PRICE)));
+        product.setPrice(cursor.getLong(cursor.getColumnIndex(PlDataBase.PRODUCT_PRICE)));
         return product;
     }
 

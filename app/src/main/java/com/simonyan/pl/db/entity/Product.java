@@ -1,45 +1,50 @@
 package com.simonyan.pl.db.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import org.parceler.Parcel;
 
-@Parcel
-public class Product {
+public class Product implements Parcelable {
 
     @SerializedName("product_id")
-    private String id;
+    private long id;
 
     @SerializedName("name")
     private String name;
 
-    @SerializedName("description")
-    private String description;
-
     @SerializedName("price")
-    private int price;
+    private long price;
 
     @SerializedName("image")
     private String image;
 
-    public Product() {
+    @SerializedName("description")
+    private String description;
 
+    private boolean isFavorite;
+
+    private boolean isUserProduct = false;
+
+    public Product() {
     }
 
-    public Product(String id, String name, String description, int price, String image) {
-
+    public Product(long id, String name, long price, String image, String description, boolean isFavorite) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.price = price;
         this.image = image;
+        this.description = description;
+        this.isFavorite = isFavorite;
+//        this.isUserProduct = isUserProduct;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -51,19 +56,11 @@ public class Product {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 
@@ -75,15 +72,67 @@ public class Product {
         this.image = image;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", image='" + image + '\'' +
-                '}';
+    public String getDescription() {
+        return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public boolean isUserProduct() {
+        return isUserProduct;
+    }
+
+    public void setUserProduct(boolean userProduct) {
+        isUserProduct = userProduct;
+    }
+
+    public static Creator<Product> getCREATOR() {
+        return CREATOR;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.id);
+        dest.writeString(this.name);
+        dest.writeLong(this.price);
+        dest.writeString(this.image);
+        dest.writeString(this.description);
+        dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
+    }
+
+    protected Product(Parcel in) {
+        this.id = in.readLong();
+        this.name = in.readString();
+        this.price = in.readLong();
+        this.image = in.readString();
+        this.description = in.readString();
+        this.isFavorite = in.readByte() != 0;
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel source) {
+            return new Product(source);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
 }

@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.simonyan.pl.R;
 import com.simonyan.pl.ui.fragments.AboutFragment;
+import com.simonyan.pl.ui.fragments.FavoriteFragment;
 import com.simonyan.pl.ui.fragments.ProductListFragment;
 import com.simonyan.pl.util.FragmentTransactionManager;
 
@@ -96,6 +97,15 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
                         false
                 );
                 break;
+
+            case R.id.nav_fv_list:
+                openScreen(
+                        FavoriteFragment.newInstance(),
+                        R.id.nav_fv_list,
+                        false
+                );
+                break;
+
 
             case R.id.nav_about:
                 openScreen(

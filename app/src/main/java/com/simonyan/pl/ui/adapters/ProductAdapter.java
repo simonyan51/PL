@@ -1,5 +1,6 @@
 package com.simonyan.pl.ui.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,51 +94,54 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mTvProductTitle;
-        TextView mTvProductPrice;
-        ImageView mIvProductImage;
-        LinearLayout mLlItemContainer;
+        Context context;
+        TextView tvProductTitle;
+        TextView tvProductPrice;
+        ImageView ivProductImage;
+        LinearLayout llItemContainer;
         OnItemClickListener onItemClickListener;
         ArrayList<Product> productArrayList;
 
         ViewHolder(View itemView, ArrayList<Product> productArrayList, OnItemClickListener onItemClickListener) {
             super(itemView);
+            this.context = itemView.getContext();
             this.productArrayList = productArrayList;
             this.onItemClickListener = onItemClickListener;
             findViews(itemView);
         }
 
         void findViews(View view) {
-            mLlItemContainer = (LinearLayout) view.findViewById(R.id.ll_product_item_container);
-            mTvProductTitle = (TextView) view.findViewById(R.id.tv_product_item_title);
-            mTvProductPrice = (TextView) view.findViewById(R.id.tv_product_item_price);
-            mIvProductImage = (ImageView) view.findViewById(R.id.iv_product_item_logo);
+            llItemContainer = (LinearLayout) view.findViewById(R.id.ll_product_item_container);
+            tvProductTitle = (TextView) view.findViewById(R.id.tv_product_item_title);
+            tvProductPrice = (TextView) view.findViewById(R.id.tv_product_item_price);
+            ivProductImage = (ImageView) view.findViewById(R.id.iv_product_item_logo);
         }
 
         void bindData() {
 
-
             Glide.with(itemView.getContext())
                     .load(productArrayList.get(getAdapterPosition()).getImage())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(mIvProductImage);
+                    .into(ivProductImage);
 
-            mTvProductTitle.setText(productArrayList.get(getAdapterPosition()).getName());
+            tvProductTitle.setText(productArrayList.get(getAdapterPosition()).getName());
 
-            mTvProductPrice.setText(String.valueOf(productArrayList.get(getAdapterPosition()).getPrice()));
+            tvProductPrice.setText(String.valueOf(productArrayList.get(getAdapterPosition()).getPrice()));
 
-            mLlItemContainer.setOnClickListener(new View.OnClickListener() {
+            llItemContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onItemClick(productArrayList.get(getAdapterPosition()));
+                    onItemClickListener.onItemClick(productArrayList.get(getAdapterPosition()),
+                            getAdapterPosition());
                 }
             });
 
-            mLlItemContainer.setOnLongClickListener(new View.OnLongClickListener() {
+            llItemContainer.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    onItemClickListener.onLongItemClick(productArrayList.get(getAdapterPosition()));
-                    return false;
+                    onItemClickListener.onItemLongClick(productArrayList.get(getAdapterPosition()),
+                            getAdapterPosition());
+                    return true;
                 }
             });
         }
@@ -145,8 +149,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     public interface OnItemClickListener {
 
-        void onItemClick(Product product);
-        void onLongItemClick(Product product);
+        void onItemClick(Product product, int position);
+
+        void onItemLongClick(Product product, int position);
 
     }
 }

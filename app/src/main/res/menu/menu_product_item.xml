@@ -12,4 +12,18 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/action_add_product"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_product_unfav"
+        android:icon="@android:drawable/star_off"
+        android:title="Unfav"
+        android:visible="true"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_product_fav"
+        android:icon="@android:drawable/star_on"
+        android:title="Fav"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 </menu>

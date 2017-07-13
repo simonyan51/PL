@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,29 +22,22 @@ import com.simonyan.pl.db.cursor.CursorReader;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.handler.PlAsyncQueryHandler;
 import com.simonyan.pl.io.bus.BusProvider;
-import com.simonyan.pl.io.rest.HttpRequestManager;
-import com.simonyan.pl.io.service.PLIntentService;
 import com.simonyan.pl.ui.activities.AddProductActivity;
 import com.simonyan.pl.ui.activities.ProductActivity;
 import com.simonyan.pl.ui.adapters.ProductAdapter;
 import com.simonyan.pl.util.Constant;
-import com.simonyan.pl.util.NetworkUtil;
 
 import java.util.ArrayList;
 
-import static android.app.Activity.RESULT_OK;
-import static com.simonyan.pl.ui.activities.AddProductActivity.NEW_PRODUCT;
-
-public class ProductListFragment extends BaseFragment implements View.OnClickListener,
+public class FavoriteFragment extends BaseFragment implements View.OnClickListener,
         PlAsyncQueryHandler.AsyncQueryListener, ProductAdapter.OnItemClickListener {
 
     // ===========================================================
     // Constants
     // ===========================================================
 
-    private static final String LOG_TAG = ProductListFragment.class.getSimpleName();
-
-    private static final int REQUEST_CODE_ADD = 1;
+    private static final String LOG_TAG = FavoriteFragment.class.getSimpleName();
+    private static final int REQUEST_CODE_ADD = 2;
 
     // ===========================================================
     // Fields
@@ -58,18 +49,17 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     private ProductAdapter mRecyclerViewAdapter;
     private LinearLayoutManager mLlm;
     private ArrayList<Product> mProductArrayList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    public static ProductListFragment newInstance() {
-        return new ProductListFragment();
+    public static FavoriteFragment newInstance() {
+        return new FavoriteFragment();
     }
 
-    public static ProductListFragment newInstance(Bundle args) {
-        ProductListFragment fragment = new ProductListFragment();
+    public static FavoriteFragment newInstance(Bundle args) {
+        FavoriteFragment fragment = new FavoriteFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -92,25 +82,20 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_product_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorites_list, container, false);
         BusProvider.register(this);
         findViews(view);
         init();
         setListeners();
         getData();
         customizeActionBar();
-
-        if (NetworkUtil.getInstance().isConnected(getActivity())) {
-            PLIntentService.start(
-                    getActivity(),
-                    Constant.API.PRODUCT_LIST,
-                    HttpRequestManager.RequestType.PRODUCT_LIST
-            );
-        } else {
-            mTlAsyncQueryHandler.getProducts();
-        }
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTlAsyncQueryHandler.getAllFavoriteProducts();
     }
 
     @Override
@@ -168,13 +153,10 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         inflater.inflate(R.menu.menu_action_bar, menu);
     }
 
-
-
-
     @Override
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
         switch (token) {
-            case PlAsyncQueryHandler.QueryToken.GET_PRODUCTS:
+            case PlAsyncQueryHandler.QueryToken.GET_FAVORITE_PRODUCTS:
                 ArrayList<Product> products = CursorReader.parseProducts(cursor);
                 mProductArrayList.clear();
                 mProductArrayList.addAll(products);
@@ -205,60 +187,16 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case REQUEST_CODE_ADD:
-                if (resultCode == RESULT_OK) {
-                    Product newProduct = data.getParcelableExtra(NEW_PRODUCT);
-                    mProductArrayList.add(newProduct);
-                    mRecyclerViewAdapter.notifyDataSetChanged();
-                }
-                break;
-
-        }
-
-    }
-
     // ===========================================================
     // Methods
     // ===========================================================
 
     private void setListeners() {
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchData();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
     }
 
     private void findViews(View view) {
-        mRv = (RecyclerView) view.findViewById(R.id.rv_fragment_proudct_list_recycler);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sr_fragment_proudct_list_swipe);
-    }
-
-    private void fetchData() {
-
-        if (NetworkUtil.getInstance().isConnected(getContext())) {
-
-            mTlAsyncQueryHandler.deleteProducts();
-
-            PLIntentService.start(
-                    getActivity(),
-                    Constant.API.PRODUCT_LIST,
-                    HttpRequestManager.RequestType.PRODUCT_LIST
-            );
-
-        } else {
-
-            mTlAsyncQueryHandler.getProducts();
-
-            Snackbar.make(getActivity().findViewById(R.id.dl_main), R.string.msg_network_connection_error, Snackbar.LENGTH_LONG).show();
-        }
+        mRv = (RecyclerView) view.findViewById(R.id.rv_fv_list);
     }
 
     private void init() {
@@ -290,6 +228,7 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     private void customizeActionBar() {
 
     }
+
 
     // ===========================================================
     // Inner and Anonymous Classes

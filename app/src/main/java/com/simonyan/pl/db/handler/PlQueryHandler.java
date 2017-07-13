@@ -7,6 +7,7 @@ import com.simonyan.pl.db.PlDataBase;
 import com.simonyan.pl.db.cursor.CursorReader;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.provider.UriBuilder;
+import com.simonyan.pl.util.AppUtil;
 
 import java.util.ArrayList;
 
@@ -53,21 +54,30 @@ public class PlQueryHandler {
     public synchronized static void addProduct(Context context, Product product) {
         context.getContentResolver().insert(
                 UriBuilder.buildProductUri(),
-                PlDataBase.composeValues(product, PlDataBase.PRODUCT_TABLE)
+                PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS)
         );
     }
 
     public synchronized static void addProducts(Context context, ArrayList<Product> products) {
         context.getContentResolver().bulkInsert(
                 UriBuilder.buildProductUri(),
-                PlDataBase.composeValuesArray(products, PlDataBase.PRODUCT_TABLE)
+                PlDataBase.composeValuesArray(products, PlDataBase.ContentValuesType.PRODUCTS)
         );
     }
 
     public synchronized static void updateProduct(Context context, Product product) {
         context.getContentResolver().update(
                 UriBuilder.buildProductUri(),
-                PlDataBase.composeValues(product, PlDataBase.PRODUCT_TABLE),
+                PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS),
+                PlDataBase.PRODUCT_ID + "=?",
+                new String[]{String.valueOf(product.getId())}
+        );
+    }
+
+    public synchronized static void updateProductDescription(Context context, Product product) {
+        context.getContentResolver().update(
+                UriBuilder.buildProductUri(),
+                PlDataBase.composeValues(product, PlDataBase.ContentValuesType.DESCRIPTION),
                 PlDataBase.PRODUCT_ID + "=?",
                 new String[]{String.valueOf(product.getId())}
         );
@@ -77,7 +87,7 @@ public class PlQueryHandler {
         for (Product product : products) {
             context.getContentResolver().update(
                     UriBuilder.buildProductUri(),
-                    PlDataBase.composeValues(product, PlDataBase.PRODUCT_TABLE),
+                    PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS),
                     PlDataBase.PRODUCT_ID + "=?",
                     new String[]{String.valueOf(product.getId())}
             );
@@ -120,6 +130,28 @@ public class PlQueryHandler {
                 null,
                 null
         );
+    }
+
+    public synchronized static ArrayList<Product> getAllFavoriteProducts(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                UriBuilder.buildProductUri(),
+                PlDataBase.Projection.PRODUCT,
+                PlDataBase.PRODUCT_FAVORITE + "=?",
+                new String[]{String.valueOf(AppUtil.booleanToInt(true))},
+                null
+        );
+        return CursorReader.parseProducts(cursor);
+    }
+
+    public synchronized static ArrayList<Product> getAllUserProducts(Context context) {
+        Cursor cursor = context.getContentResolver().query(
+                UriBuilder.buildProductUri(),
+                PlDataBase.Projection.PRODUCT,
+                PlDataBase.PRODUCT_USER + "=?",
+                new String[]{String.valueOf(AppUtil.booleanToInt(true))},
+                null
+        );
+        return CursorReader.parseProducts(cursor);
     }
 
     // ===========================================================
