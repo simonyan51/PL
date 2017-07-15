@@ -96,6 +96,11 @@ public class ProductActivity extends BaseActivity implements
         mMenuUnfav = menu.findItem(R.id.menu_product_unfav);
         mMenuFav = menu.findItem(R.id.menu_product_fav);
 
+        if (!mProduct.isUserProduct()) {
+            mMenuEdit.setVisible(false);
+            mMenuDone.setVisible(false);
+        }
+
         if (!mProduct.isFavorite()) {
             mMenuFav.setVisible(false);
             mMenuUnfav.setVisible(true);
@@ -181,8 +186,13 @@ public class ProductActivity extends BaseActivity implements
         switch (token) {
             case PlAsyncQueryHandler.QueryToken.UPDATE_PRODUCT:
                 mLlProductEdit.setVisibility(View.GONE);
+                if (!mProduct.isUserProduct()) {
+                mMenuEdit.setVisible(false);
                 mMenuDone.setVisible(false);
-                mMenuEdit.setVisible(true);
+                } else {
+                    mMenuDone.setVisible(false);
+                    mMenuEdit.setVisible(true);
+                }
                 openViewLayout(mProduct);
                 break;
         }
@@ -222,7 +232,8 @@ public class ProductActivity extends BaseActivity implements
     }
 
     private void loadProduct() {
-        if (NetworkUtil.getInstance().isConnected(this)) {
+
+        if (NetworkUtil.getInstance().isConnected(this) && !mProduct.isUserProduct()) {
             PLIntentService.start(
                     this,
                     Constant.API.PRODUCT_ITEM + mProduct.getId() + Constant.API.PRODUCT_ITEM_POSTFIX,

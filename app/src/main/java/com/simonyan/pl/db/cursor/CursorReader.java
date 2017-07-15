@@ -87,8 +87,8 @@ public class CursorReader {
         product.setId(cursor.getLong(cursor.getColumnIndex(PlDataBase.PRODUCT_ID)));
         product.setName(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_NAME)));
         product.setImage(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_IMAGE)));
-        product.setFavorite(AppUtil.intToBoolean(cursor.getInt(cursor.getColumnIndex(PlDataBase.PRODUCT_FAVORITE))));
         product.setUserProduct(AppUtil.intToBoolean(cursor.getInt(cursor.getColumnIndex(PlDataBase.PRODUCT_USER))));
+        product.setFavorite(AppUtil.intToBoolean(cursor.getInt(cursor.getColumnIndex(PlDataBase.PRODUCT_FAVORITE))));
         product.setDescription(cursor.getString(cursor.getColumnIndex(PlDataBase.PRODUCT_DESCRIPTION)));
         product.setPrice(cursor.getLong(cursor.getColumnIndex(PlDataBase.PRODUCT_PRICE)));
         return product;

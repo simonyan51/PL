@@ -187,6 +187,7 @@ public class AddProductActivity extends BaseActivity implements
         product.setName(mEtProductName.getText().toString());
         product.setPrice(Integer.parseInt(mEtProductPrice.getText().toString()));
         product.setDescription(mEtProductDesc.getText().toString());
+        product.setUserProduct(true);
 
 
 

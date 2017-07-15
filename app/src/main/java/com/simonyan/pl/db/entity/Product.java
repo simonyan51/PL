@@ -25,19 +25,19 @@ public class Product implements Parcelable {
 
     private boolean isFavorite;
 
-    private boolean isUserProduct = false;
+    private boolean isUserProduct;
 
     public Product() {
     }
 
-    public Product(long id, String name, long price, String image, String description, boolean isFavorite) {
+    public Product(long id, String name, long price, String image, String description, boolean isFavorite, boolean isUserProduct) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.image = image;
         this.description = description;
         this.isFavorite = isFavorite;
-//        this.isUserProduct = isUserProduct;
+        this.isUserProduct = isUserProduct;
     }
 
     public long getId() {

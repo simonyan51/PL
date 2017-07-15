@@ -1,5 +1,6 @@
 package com.simonyan.pl.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,7 +8,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +17,8 @@ import com.simonyan.pl.ui.fragments.AboutFragment;
 import com.simonyan.pl.ui.fragments.FavoriteFragment;
 import com.simonyan.pl.ui.fragments.ProductListFragment;
 import com.simonyan.pl.util.FragmentTransactionManager;
+import com.simonyan.pl.util.Preference;
+
 
 public class MainActivity extends  BaseActivity  implements View.OnClickListener,
         NavigationView.OnNavigationItemSelectedListener {
@@ -33,7 +35,6 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private SwipeRefreshLayout mRefreshLayout;
 
     // ===========================================================
     // Constructors
@@ -106,7 +107,6 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
                 );
                 break;
 
-
             case R.id.nav_about:
                 openScreen(
                         AboutFragment.newInstance(),
@@ -114,12 +114,15 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
                         true
                 );
                 break;
+
+            case R.id.nav_logout:
+                logout();
+                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     // ===========================================================
     // Click Listeners
@@ -127,9 +130,6 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-
-        }
     }
 
     // ===========================================================
@@ -143,8 +143,6 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
     private void findViews() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main);
         mNavigationView = (NavigationView) findViewById(R.id.nav_main);
-        mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sr_fragment_proudct_list_swipe);
-
     }
 
     private void customizeActionBar() {
@@ -164,7 +162,6 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
     }
 
     private void openScreen(Fragment fragment, int item, boolean mustAddToBackStack) {
-
         mNavigationView.getMenu().findItem(item).setChecked(true);
 
         FragmentTransactionManager.displayFragment(
@@ -174,9 +171,16 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
                 mustAddToBackStack
 
         );
-
     }
 
+    private void logout() {
+        Preference.getInstance(this).setUserMail(null);
+        Preference.getInstance(this).setUserPass(null);
+        Intent intent = new Intent(this, AuthActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
     // ===========================================================
     // Inner and Anonymous Classes

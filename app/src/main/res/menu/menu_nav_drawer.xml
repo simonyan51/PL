@@ -19,6 +19,11 @@
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_drawerarrow"
             android:title="@string/text_about"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_drawerarrow"
+            android:title="@string/text_logout"/>
+
 
     </group>
 

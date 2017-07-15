@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.common.eventbus.Subscribe;
 import com.simonyan.pl.R;
@@ -24,6 +25,7 @@ import com.simonyan.pl.db.cursor.CursorReader;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.handler.PlAsyncQueryHandler;
 import com.simonyan.pl.io.bus.BusProvider;
+import com.simonyan.pl.io.bus.event.ApiEvent;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.service.PLIntentService;
 import com.simonyan.pl.ui.activities.AddProductActivity;
@@ -38,14 +40,14 @@ import static android.app.Activity.RESULT_OK;
 import static com.simonyan.pl.ui.activities.AddProductActivity.NEW_PRODUCT;
 
 public class ProductListFragment extends BaseFragment implements View.OnClickListener,
-        PlAsyncQueryHandler.AsyncQueryListener, ProductAdapter.OnItemClickListener {
+        PlAsyncQueryHandler.AsyncQueryListener, ProductAdapter.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     // ===========================================================
     // Constants
     // ===========================================================
 
     private static final String LOG_TAG = ProductListFragment.class.getSimpleName();
-
     private static final int REQUEST_CODE_ADD = 1;
 
     // ===========================================================
@@ -58,7 +60,7 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     private ProductAdapter mRecyclerViewAdapter;
     private LinearLayoutManager mLlm;
     private ArrayList<Product> mProductArrayList;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwRefresh;
 
     // ===========================================================
     // Constructors
@@ -99,16 +101,7 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         getData();
         customizeActionBar();
-
-        if (NetworkUtil.getInstance().isConnected(getActivity())) {
-            PLIntentService.start(
-                    getActivity(),
-                    Constant.API.PRODUCT_LIST,
-                    HttpRequestManager.RequestType.PRODUCT_LIST
-            );
-        } else {
-            mTlAsyncQueryHandler.getProducts();
-        }
+        fetchData();
 
         return view;
     }
@@ -119,6 +112,29 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         BusProvider.unregister(this);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case REQUEST_CODE_ADD:
+                if (resultCode == RESULT_OK) {
+                    Product newProduct = data.getParcelableExtra(NEW_PRODUCT);
+                    mProductArrayList.add(newProduct);
+                    mRecyclerViewAdapter.notifyDataSetChanged();
+                }
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_action_bar, menu);
+    }
+
     // ===========================================================
     // Click Listeners
     // ===========================================================
@@ -127,29 +143,6 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
         }
-    }
-
-    @Override
-    public void onItemClick(Product product, int position) {
-        Intent intent = new Intent(getContext(), ProductActivity.class);
-        intent.putExtra(Constant.Extra.EXTRA_PRODUCT_ID, product.getId());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onItemLongClick(Product product, int position) {
-        mTlAsyncQueryHandler.deleteProduct(product, position);
-    }
-
-    // ===========================================================
-    // Other Listeners, methods for/from Interfaces
-    // ===========================================================
-
-    @Subscribe
-    public void onEventReceived(ArrayList<Product> products) {
-        mProductArrayList.clear();
-        mProductArrayList.addAll(products);
-        mRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -164,12 +157,36 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_action_bar, menu);
+    public void onItemClick(Product product, int position) {
+        Intent intent = new Intent(getContext(), ProductActivity.class);
+        intent.putExtra(Constant.Extra.EXTRA_PRODUCT_ID, product.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onItemLongClick(Product product, int position) {
+        mTlAsyncQueryHandler.deleteProduct(product, position);
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchData();
+        mSwRefresh.setRefreshing(false);
     }
 
 
+    // ===========================================================
+    // Other Listeners, methods for/from Interfaces
+    // ===========================================================
 
+    @Subscribe
+    public void onEventReceived(ApiEvent<Object> apiEvent) {
+        if (!apiEvent.isSuccess()) {
+            Toast.makeText(getActivity(), "Something went wrong, please try again",
+                    Toast.LENGTH_SHORT).show();
+        }
+        mTlAsyncQueryHandler.getProducts();
+    }
 
     @Override
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -205,60 +222,18 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        switch (requestCode) {
-            case REQUEST_CODE_ADD:
-                if (resultCode == RESULT_OK) {
-                    Product newProduct = data.getParcelableExtra(NEW_PRODUCT);
-                    mProductArrayList.add(newProduct);
-                    mRecyclerViewAdapter.notifyDataSetChanged();
-                }
-                break;
-
-        }
-
-    }
-
     // ===========================================================
     // Methods
     // ===========================================================
 
     private void setListeners() {
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                fetchData();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
     }
 
     private void findViews(View view) {
         mRv = (RecyclerView) view.findViewById(R.id.rv_fragment_proudct_list_recycler);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sr_fragment_proudct_list_swipe);
-    }
-
-    private void fetchData() {
-
-        if (NetworkUtil.getInstance().isConnected(getContext())) {
-
-            mTlAsyncQueryHandler.deleteProducts();
-
-            PLIntentService.start(
-                    getActivity(),
-                    Constant.API.PRODUCT_LIST,
-                    HttpRequestManager.RequestType.PRODUCT_LIST
-            );
-
-        } else {
-
-            mTlAsyncQueryHandler.getProducts();
-
-            Snackbar.make(getActivity().findViewById(R.id.dl_main), R.string.msg_network_connection_error, Snackbar.LENGTH_LONG).show();
-        }
+        mSwRefresh = (SwipeRefreshLayout) view.findViewById(R.id.sr_fragment_proudct_list_swipe);
+        mSwRefresh.setOnRefreshListener(this);
     }
 
     private void init() {
@@ -280,6 +255,22 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    private void fetchData() {
+
+        if (NetworkUtil.getInstance().isConnected(getActivity())) {
+            PLIntentService.start(
+                    getActivity(),
+                    Constant.API.PRODUCT_LIST,
+                    HttpRequestManager.RequestType.PRODUCT_LIST
+            );
+        } else {
+            mTlAsyncQueryHandler.getProducts();
+            Snackbar.make(getActivity().findViewById(R.id.dl_main), R.string.msg_network_connection_error, Snackbar.LENGTH_LONG).show();
+        }
+
+    }
+
+
     private void startAddProductActivity() {
 
         Intent intent = new Intent(getActivity(), AddProductActivity.class);
@@ -290,6 +281,7 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     private void customizeActionBar() {
 
     }
+
 
     // ===========================================================
     // Inner and Anonymous Classes

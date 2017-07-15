@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.simonyan.pl.R;
 import com.simonyan.pl.util.Constant;
@@ -16,12 +18,14 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
     // ===========================================================
 
     private static final String LOG_TAG = AboutFragment.class.getSimpleName();
+    private static final String LINKEDIN_URL = "https://www.linkedin.com/in/gnel-simonyan-326965144/";
 
     // ===========================================================
     // Fields
     // ===========================================================
 
     private Bundle mArgumentData;
+    private WebView mWvAbout;
 
     // ===========================================================
     // Constructors
@@ -57,10 +61,17 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         findViews(view);
+        getActivity().setTitle(getString(R.string.text_simonyan51_about));
         setListeners();
         getData();
         customizeActionBar();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        configWebView();
     }
 
     // ===========================================================
@@ -76,6 +87,7 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
     // Other Listeners, methods for/from Interfaces
     // ===========================================================
 
+
     // ===========================================================
     // Methods
     // ===========================================================
@@ -84,7 +96,15 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
 
     }
 
+    private void configWebView() {
+
+        mWvAbout.loadUrl(LINKEDIN_URL);
+        WebSettings webSettings = mWvAbout.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+    }
+
     private void findViews(View view) {
+        mWvAbout = (WebView) view.findViewById(R.id.wv_about_site);
 
     }
 

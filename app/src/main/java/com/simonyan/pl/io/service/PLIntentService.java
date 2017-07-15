@@ -11,6 +11,7 @@ import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.entity.ProductResponse;
 import com.simonyan.pl.db.handler.PlQueryHandler;
 import com.simonyan.pl.io.bus.BusProvider;
+import com.simonyan.pl.io.bus.event.ApiEvent;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.rest.HttpResponseUtil;
 import com.simonyan.pl.util.Constant;
@@ -102,11 +103,19 @@ public class PLIntentService extends IntentService {
                 String jsonList = HttpResponseUtil.parseResponse(connection);
 
                 ProductResponse productResponse = new Gson().fromJson(jsonList, ProductResponse.class);
-                ArrayList<Product> products = productResponse.getProducts();
 
-                PlQueryHandler.addProducts(this, products);
+                if (productResponse != null) {
 
-                BusProvider.getInstance().post(products);
+                    ArrayList<Product> products = productResponse.getProducts();
+
+                    PlQueryHandler.addProducts(this, products);
+
+                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, true));
+
+                } else {
+                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, false));
+
+                }
 
                 break;
 
