@@ -108,6 +108,18 @@ public class PLIntentService extends IntentService {
 
                     ArrayList<Product> products = productResponse.getProducts();
 
+                    ArrayList<Product> oldProducts = PlQueryHandler.getProducts(getBaseContext());
+
+                    for (Product oldProduct : oldProducts) {
+                        for (Product newProduct : products) {
+                            if (oldProduct.getId() == newProduct.getId()) {
+                                if (oldProduct.isFavorite() != newProduct.isFavorite()) {
+                                    newProduct.setFavorite(true);
+                                }
+                            }
+                        }
+                    }
+
                     PlQueryHandler.addProducts(this, products);
 
                     BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, true));
@@ -131,9 +143,15 @@ public class PLIntentService extends IntentService {
 
                 Product product = new Gson().fromJson(jsonItem, Product.class);
 
-                PlQueryHandler.updateProductDescription(this, product);
+                if (product != null) {
 
-                BusProvider.getInstance().post(product);
+                    PlQueryHandler.updateProductDescription(this, product);
+
+                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_ITEM_LOADED, true, product));
+
+                } else {
+                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_ITEM_LOADED, false));
+                }
 
                 break;
 

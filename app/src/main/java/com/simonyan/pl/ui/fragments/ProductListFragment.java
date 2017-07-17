@@ -182,7 +182,7 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
     @Subscribe
     public void onEventReceived(ApiEvent<Object> apiEvent) {
         if (!apiEvent.isSuccess()) {
-            Toast.makeText(getActivity(), "Something went wrong, please try again",
+            Toast.makeText(getActivity(), R.string.msg_wrong_error,
                     Toast.LENGTH_SHORT).show();
         }
         mTlAsyncQueryHandler.getProducts();

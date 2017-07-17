@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.simonyan.pl.db.PlDataBase;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.provider.UriBuilder;
+import com.simonyan.pl.io.bus.event.ApiEvent;
 import com.simonyan.pl.util.AppUtil;
 
 import java.lang.ref.WeakReference;
@@ -32,6 +33,7 @@ public class PlAsyncQueryHandler extends AsyncQueryHandler {
         public static final int DELETE_PRODUCT = 105;
         public static final int DELETE_PRODUCTS = 106;
         public static final int GET_FAVORITE_PRODUCTS = 107;
+        public static final int UPDATE_FAVORITE_PRODUCT = 108;
     }
 
     // ===========================================================
@@ -159,6 +161,17 @@ public class PlAsyncQueryHandler extends AsyncQueryHandler {
         startUpdate(
                 QueryToken.UPDATE_PRODUCT,
                 null,
+                UriBuilder.buildProductUri(),
+                PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS),
+                PlDataBase.PRODUCT_ID + "=?",
+                new String[]{String.valueOf(product.getId())}
+        );
+    }
+
+    public synchronized void updateFavoriteProduct(Product product) {
+        startUpdate(
+                QueryToken.UPDATE_FAVORITE_PRODUCT,
+                ApiEvent.EventType.PRODUCT_ITEM_LOADED,
                 UriBuilder.buildProductUri(),
                 PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS),
                 PlDataBase.PRODUCT_ID + "=?",

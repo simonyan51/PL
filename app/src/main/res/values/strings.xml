@@ -40,4 +40,5 @@
     <string name="msg_edt_error_mail">Invalid Email</string>
     <string name="text_logout">Logout</string>
     <string name="text_simonyan51_about">About simonyan51</string>
+    <string name="msg_wrong_error">Something went wrong, please try again</string>
 </resources>

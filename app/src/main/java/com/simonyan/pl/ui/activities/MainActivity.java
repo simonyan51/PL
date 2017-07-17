@@ -103,7 +103,7 @@ public class MainActivity extends  BaseActivity  implements View.OnClickListener
                 openScreen(
                         FavoriteFragment.newInstance(),
                         R.id.nav_fv_list,
-                        false
+                        true
                 );
                 break;
 

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,6 +22,7 @@ import com.simonyan.pl.db.cursor.CursorReader;
 import com.simonyan.pl.db.entity.Product;
 import com.simonyan.pl.db.handler.PlAsyncQueryHandler;
 import com.simonyan.pl.io.bus.BusProvider;
+import com.simonyan.pl.io.bus.event.ApiEvent;
 import com.simonyan.pl.io.rest.HttpRequestManager;
 import com.simonyan.pl.io.service.PLIntentService;
 import com.simonyan.pl.util.Constant;
@@ -135,14 +137,14 @@ public class ProductActivity extends BaseActivity implements
                 mMenuFav.setVisible(false);
                 mMenuUnfav.setVisible(true);
                 mProduct.setFavorite(false);
-                mPlAsyncQueryHandler.updateProduct(mProduct);
+                mPlAsyncQueryHandler.updateFavoriteProduct(mProduct);
                 return true;
 
             case R.id.menu_product_unfav:
                 mMenuFav.setVisible(true);
                 mMenuUnfav.setVisible(false);
                 mProduct.setFavorite(true);
-                mPlAsyncQueryHandler.updateProduct(mProduct);
+                mPlAsyncQueryHandler.updateFavoriteProduct(mProduct);
                 return true;
 
             case R.id.menu_product_done:
@@ -160,8 +162,14 @@ public class ProductActivity extends BaseActivity implements
     // ===========================================================
 
     @Subscribe
-    public void onEventReceived(Product product) {
-        mProduct = product;
+    public void onEventReceived(ApiEvent product) {
+
+        if (product.isSuccess()) {
+            mProduct = (Product) product.getEventData();
+        } else {
+            Toast.makeText(getBaseContext(), R.string.msg_wrong_error, Toast.LENGTH_LONG).show();
+        }
+
         openViewLayout(mProduct);
     }
 
@@ -186,14 +194,30 @@ public class ProductActivity extends BaseActivity implements
         switch (token) {
             case PlAsyncQueryHandler.QueryToken.UPDATE_PRODUCT:
                 mLlProductEdit.setVisibility(View.GONE);
-                if (!mProduct.isUserProduct()) {
-                mMenuEdit.setVisible(false);
                 mMenuDone.setVisible(false);
-                } else {
-                    mMenuDone.setVisible(false);
-                    mMenuEdit.setVisible(true);
-                }
+                mMenuEdit.setVisible(true);
                 openViewLayout(mProduct);
+                break;
+
+            case PlAsyncQueryHandler.QueryToken.UPDATE_FAVORITE_PRODUCT:
+
+                if (!cookie.equals(ApiEvent.EventType.PRODUCT_ITEM_LOADED)) {
+                    Toast.makeText(this, R.string.msg_wrong_error, Toast.LENGTH_LONG).show();
+
+                    if (mMenuFav.isVisible() && mProduct.isFavorite()) {
+
+                        mMenuFav.setVisible(false);
+                        mMenuUnfav.setVisible(true);
+                        mProduct.setFavorite(false);
+
+                    } else {
+
+                        mMenuUnfav.setVisible(false);
+                        mMenuFav.setVisible(true);
+                        mProduct.setFavorite(true);
+                    }
+                }
+
                 break;
         }
     }
