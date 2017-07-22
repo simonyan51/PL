@@ -112,11 +112,10 @@ public class PLIntentService extends IntentService {
 
                     for (Product oldProduct : oldProducts) {
                         for (Product newProduct : products) {
-                            if (oldProduct.getId() == newProduct.getId()) {
-                                if (oldProduct.isFavorite() != newProduct.isFavorite()) {
-                                    newProduct.setFavorite(true);
-                                }
-                            }
+
+                            if (oldProduct.getId() == newProduct.getId())
+                                newProduct.setFavorite(oldProduct.isFavorite());
+
                         }
                     }
 

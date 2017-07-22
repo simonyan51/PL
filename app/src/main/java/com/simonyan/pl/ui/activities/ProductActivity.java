@@ -37,6 +37,10 @@ public class ProductActivity extends BaseActivity implements
 
     private static final String LOG_TAG = ProductActivity.class.getSimpleName();
 
+    private static final String PRODUCT_NAME = "PRODUCT_NAME";
+
+    private static final String IS_EDITING = "IS_EDITING";
+
     // ===========================================================
     // Fields
     // ===========================================================
@@ -76,6 +80,7 @@ public class ProductActivity extends BaseActivity implements
         findViews();
         init();
         getData();
+        setSavedInstanceState(savedInstanceState);
     }
 
     @Override
@@ -226,9 +231,37 @@ public class ProductActivity extends BaseActivity implements
     public void onDeleteComplete(int token, Object cookie, int result) {
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Product savedProduct = new Product();
+
+        savedProduct.setName(mEtProductTitle.getText().toString());
+        savedProduct.setPrice(Integer.parseInt(mEtProductPrice.getText().toString()));
+        savedProduct.setDescription(mEtProductDesc.getText().toString());
+
+        outState.putParcelable(PRODUCT_NAME, savedProduct);
+        outState.putBoolean(IS_EDITING, mMenuEdit.isVisible());
+
+    }
+
+
+
     // ===========================================================
     // Methods
     // ===========================================================
+
+    private void setSavedInstanceState(Bundle args) {
+        if (args != null) {
+            if (!args.getBoolean(IS_EDITING)) {
+
+                mMenuDone.setVisible(true);
+                mMenuEdit.setVisible(false);
+                openEditLayout((Product) args.getParcelable(PRODUCT_NAME));
+            }
+        }
+    }
 
     private void getData() {
         long productId = getIntent().getExtras().getLong(Constant.Extra.EXTRA_PRODUCT_ID);

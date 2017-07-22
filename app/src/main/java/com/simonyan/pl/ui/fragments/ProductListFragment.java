@@ -101,9 +101,14 @@ public class ProductListFragment extends BaseFragment implements View.OnClickLis
         setListeners();
         getData();
         customizeActionBar();
-        fetchData();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchData();
     }
 
     @Override

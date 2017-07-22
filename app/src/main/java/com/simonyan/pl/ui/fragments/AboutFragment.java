@@ -86,6 +86,7 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
     // ===========================================================
     // Click Listeners
     // ===========================================================
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -95,7 +96,6 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
     // ===========================================================
     // Other Listeners, methods for/from Interfaces
     // ===========================================================
-
 
     // ===========================================================
     // Methods
@@ -110,7 +110,7 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
         mWvAbout.loadUrl(LINKEDIN_URL);
 
         mWvAbout.setWebChromeClient(new CustomWebChromeClient());
-
+        mWvAbout.setWebViewClient(new CustomWebViewClient());
         WebSettings webSettings = mWvAbout.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
@@ -151,6 +151,7 @@ public class AboutFragment extends BaseFragment implements View.OnClickListener 
             return true;
         }
     }
+
     private class CustomWebChromeClient extends WebChromeClient {
         @Override
         public void onReceivedTitle(WebView view, String title) {
