@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PL</string>
+    <string name="app_name">Product List</string>
 
     <!--Util-->
     <string name="msg_network_connection_error">No Internet connection</string>
@@ -10,36 +10,50 @@
     <string name="msg_connection_error">Connection error</string>
     <string name="msg_navigation_drawer_open">Open navigation drawer</string>
     <string name="msg_navigation_drawer_close">Close navigation drawer</string>
+    <string name="msg_some_error">Something went wrong, please try again</string>
 
     <!--Navigation drawer menu items-->
     <string name="text_product_list">Product List</string>
     <string name="text_about">About</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_product_vp">Product viewPager</string>
+
+
+    <string name="favorite">Favorite</string>
+    <string name="text_four">Fourth item</string>
+    <string name="text_five">Fifth item</string>
     <string name="text_six">Logout</string>
     <string name="text_welcome">Welcome to \'Start Template\' \nPlease, login with any fake credentials</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="network_check">Please, Check Network Connection</string>
-    <string name="hint_product_price">Enter product price</string>
-    <string name="hint_product_name">Enter product name</string>
-    <string name="hint_product_description">Enter product description</string>
-    <string name="btn_text_add_product">Add Product</string>
-    <string name="action_add_product">Add Product</string>
-    <string name="name_error">Please, Fill The Name</string>
-    <string name="price_error">Please, Fill The Price</string>
-    <string name="desc_error">Please, Fill The Description</string>
-    <string name="product_delete_title">Delete Product</string>
-    <string name="yes_value">Yes</string>
-    <string name="cancel_value">Cancel</string>
-    <string name="delete_question">Are you sure to delete</string>
-    <string name="text_fv_list">Favorites</string>
-    <string name="text_btn_auth_sign">Sign In</string>
-    <string name="hint_tiet_auth_pass">Password</string>
+    <string name="no_internet">NO INTERNET CONNECTION </string>
+
+    <string name="edt_product_add_name">NAME</string>
+    <string name="edt_product_add_price">PRICE</string>
+    <string name="edt_product_add_desc">DESCRIPTION</string>
+
+    <string name="btn_product_add">ADD</string>
+
+    <string name="text_btn_auth_sign">Login</string>
+
+    <string name="msg_edt_error_mail">Enter email</string>
+    <string name="msg_edt_pass_error">Enter password</string>
+
     <string name="hint_tiet_auth_email">Email</string>
-    <string name="msg_edt_pass_error">Invalid Password</string>
-    <string name="msg_edt_error_mail">Invalid Email</string>
-    <string name="text_logout">Logout</string>
-    <string name="text_simonyan51_about">About simonyan51</string>
-    <string name="msg_wrong_error">Something went wrong, please try again</string>
-    <string name="product_title">title</string>
+    <string name="hint_tiet_auth_pass">Password</string>
+
+    <string name="add_product_name"> ADD PRODUCT</string>
+    <string name="product_det">PRODUCT DETAIL</string>
+    <string name="delete_product">Delete selected item?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
+    <string name="favorite_ic">Favorite</string>
+    <string name="unfavorite">Unfavorite</string>
+    <string name="text_added_new_product">Added new product</string>
+    <string name="text_no_network">NO INTERNET CONNECTION</string>
+
+
 </resources>

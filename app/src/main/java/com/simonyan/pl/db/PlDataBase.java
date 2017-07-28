@@ -6,17 +6,11 @@ import com.simonyan.pl.db.entity.Product;
 
 import java.util.ArrayList;
 
-/**
- * Created by simonyan51 on 7/5/17.
- */
-
 public class PlDataBase {
 
     // ===========================================================
     // Constants
     // ===========================================================
-
-    private static final String LOG_TAG = PlDataBase.class.getName();
 
     public static class ContentValuesType {
         public static final String PRODUCTS = "PRODUCTS";
@@ -38,9 +32,8 @@ public class PlDataBase {
     public static final String PRODUCT_NAME = "PRODUCT_NAME";
     public static final String PRODUCT_PRICE = "PRODUCT_PRICE";
     public static final String PRODUCT_IMAGE = "PRODUCT_IMAGE";
-    public static final String PRODUCT_USER = "PRODUCT_USER";
     public static final String PRODUCT_FAVORITE = "PRODUCT_FAVORITE";
-
+    public static final String PRODUCT_USER = "PRODUCT_USER";
     public static final String PRODUCT_DESCRIPTION = "PRODUCT_DESCRIPTION";
 
     public static final String CREATE_PRODUCT_TABLE = "CREATE TABLE IF NOT EXISTS " + PRODUCT_TABLE
@@ -50,8 +43,8 @@ public class PlDataBase {
             + PRODUCT_NAME + " TEXT, "
             + PRODUCT_PRICE + " INTEGER, "
             + PRODUCT_IMAGE + " TEXT, "
-            + PRODUCT_USER + " INTEGER, "
             + PRODUCT_FAVORITE + " INTEGER, "
+            + PRODUCT_USER + " INTEGER, "
             + PRODUCT_DESCRIPTION + " TEXT "
             + ");";
 
@@ -60,15 +53,14 @@ public class PlDataBase {
      ***************************************************************/
 
     public static class Projection {
-
         public static String[] PRODUCT = {
                 PlDataBase.PRODUCT_PK,
                 PlDataBase.PRODUCT_ID,
                 PlDataBase.PRODUCT_NAME,
                 PlDataBase.PRODUCT_PRICE,
                 PlDataBase.PRODUCT_IMAGE,
-                PlDataBase.PRODUCT_USER,
                 PlDataBase.PRODUCT_FAVORITE,
+                PlDataBase.PRODUCT_USER,
                 PlDataBase.PRODUCT_DESCRIPTION
         };
     }
@@ -97,21 +89,20 @@ public class PlDataBase {
      * VALUES
      ***************************************************************/
 
-    public static ContentValues composeValues(Object object, String type) {
+    public static ContentValues composeValues(Object object, String table) {
         ContentValues values = new ContentValues();
         Product product = (Product) object;
 
-        switch (type) {
+        switch (table) {
             case ContentValuesType.PRODUCTS:
                 values.put(PlDataBase.PRODUCT_ID, product.getId());
                 values.put(PlDataBase.PRODUCT_NAME, product.getName());
                 values.put(PlDataBase.PRODUCT_PRICE, product.getPrice());
                 values.put(PlDataBase.PRODUCT_IMAGE, product.getImage());
-                values.put(PlDataBase.PRODUCT_USER, product.isUserProduct());
                 values.put(PlDataBase.PRODUCT_FAVORITE, product.isFavorite());
+                values.put(PlDataBase.PRODUCT_USER, product.isFromUser());
                 values.put(PlDataBase.PRODUCT_DESCRIPTION, product.getDescription());
                 break;
-
             case ContentValuesType.DESCRIPTION:
                 values.put(PlDataBase.PRODUCT_DESCRIPTION, product.getDescription());
                 break;
@@ -131,8 +122,8 @@ public class PlDataBase {
                     values.put(PlDataBase.PRODUCT_NAME, product.getName());
                     values.put(PlDataBase.PRODUCT_PRICE, product.getPrice());
                     values.put(PlDataBase.PRODUCT_IMAGE, product.getImage());
-                    values.put(PlDataBase.PRODUCT_USER, product.isUserProduct());
                     values.put(PlDataBase.PRODUCT_FAVORITE, product.isFavorite());
+                    values.put(PlDataBase.PRODUCT_USER, product.isFromUser());
                     values.put(PlDataBase.PRODUCT_DESCRIPTION, product.getDescription());
                     valuesList.add(values);
                 }

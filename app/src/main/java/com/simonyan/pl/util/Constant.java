@@ -1,23 +1,29 @@
 package com.simonyan.pl.util;
 
+
 public class Constant {
 
-    public class Action  {
-        public static final String ACTION_UPLOAD = "ACTION_UPLOAD";
+    public class API {
+        public static final String HOST = "https://tigransarkisian.github.io";
+        public static final String PRODUCT_LIST = HOST + "/aca_pl/products.json";
+        public static final String PRODUCT_ITEM = HOST + "/aca_pl/products/"; // id
+        public static final String PRODUCT_ITEM_POSTFIX = "/details.json";
+        public static final String PRODUCT_ITEM_STATIC_IMAGE = "https://s3-eu-west-1.amazonaws.com/developer-application-test/images/3.jpg";
     }
 
     public class Argument {
         public static final String ARGUMENT_DATA = "ARGUMENT_DATA";
+        public static final String ARGUMENT_PRODUCT = "ARGUMENT_PRODUCT";
     }
 
     public class Extra {
-        public static final String EXTRA_USER = "EXTRA_USER";
-        public static final String EXTRA_PRODUCT = "EXTRA_PRODUCT";
-        public static final String EXTRA_PRODUCT_ID = "EXTRA_PRODUCT_ID";
-    }
-
-
-    public class Bundle {
+        public static final String PRODUCT_ID = "PRODUCT_ID";
+        public static final String URL = "URL";
+        public static final String POST_ENTITY = "POST_ENTITY";
+        public static final String REQUEST_TYPE = "REQUEST_TYPE";
+        public static final String NOTIFICATION_DATA = "NOTIFICATION_DATA";
+        public static final String PRODUCT = "PRODUCT";
+        public static final String MENU_STATE = "MENU_STATE";
     }
 
     public class Symbol {
@@ -35,62 +41,18 @@ public class Constant {
         public static final String AMPERSAND = "&";
     }
 
-    public class Boolean {
-        public static final String TRUE = "true";
-        public static final String FALSE = "false";
-    }
-
     public class Util {
-        public static final int QUALITY = 100;
-        public static final String ANDROID_DATA_ROOT = "Android/data/";
-        public static final String SD = "file://";
-        public static final String SHA = "SHA";
         public static final String UTF_8 = "UTF-8";
     }
-
-    public class Identifier {
-        public static final String ID = "id";
-        public static final String ANDROID = "android.support";
-        public static final String ALERT_TITLE = "alertTitle";
+    public class RequestType {
+        public static final int PRODUCT_LIST = 1;
+        public static final int PRODUCT_ITEM = 2;
     }
 
-    public class BuildType {
-        public static final String RELEASE = "release";
-        public static final String DEBUG = "debug";
+    public class RequestMethod {
+        public static final String POST = "POST";
+        public static final String GET = "GET";
+        public static final String PUT = "PUT";
     }
 
-    public class RequestMode {
-        public static final int INITIAL = 1;
-        public static final int UPDATE = 2;
-        public static final int NEXT = 3;
-        public static final int NONE = 4;
-        public static final int PREVIOUS = 5;
-    }
-
-    public class MapType {
-        public static final int NORMAL_MAP_TYPE = 1;
-        public static final int SATELLITE_MAP_TYPE = 2;
-    }
-
-    public class Build {
-        public static final String RELEASE = "release";
-        public static final String DEBUG = "debug";
-    }
-
-    public class API {
-
-        public static final String HOST = "https://tigransarkisian.github.io";
-        public static final String PRODUCT_LIST = HOST + "/aca_pl/products.json";
-        public static final String PRODUCT_ITEM = HOST + "/aca_pl/products/";
-        public static final String PRODUCT_ITEM_POSTFIX = "/details.json";
-
-    }
-
-    public class Headers {
-        public static final String CONTENT_TYPE = "Content-Type";
-    }
-
-    public class Payloads {
-        public static final String APPLICATION_JSON = "application/json";
-    }
 }

@@ -1,6 +1,5 @@
 package com.simonyan.pl.io.service;
 
-
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -12,26 +11,18 @@ import com.simonyan.pl.db.entity.ProductResponse;
 import com.simonyan.pl.db.handler.PlQueryHandler;
 import com.simonyan.pl.io.bus.BusProvider;
 import com.simonyan.pl.io.bus.event.ApiEvent;
-import com.simonyan.pl.io.rest.HttpRequestManager;
-import com.simonyan.pl.io.rest.HttpResponseUtil;
+import com.simonyan.pl.io.server.HttpRequestManager;
+import com.simonyan.pl.io.server.HttpResponseUtil;
 import com.simonyan.pl.util.Constant;
+import com.simonyan.pl.util.Preference;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
+
 public class PLIntentService extends IntentService {
 
-    // ===========================================================
-    // Constants
-    // ===========================================================
-
     private static final String LOG_TAG = PLIntentService.class.getSimpleName();
-
-    private class Extra {
-        static final String URL = "PRODUCT_LIST";
-        static final String POST_ENTITY = "POST_ENTITY";
-        static final String REQUEST_TYPE = "REQUEST_TYPE";
-    }
 
     // ===========================================================
     // Fields
@@ -62,19 +53,20 @@ public class PLIntentService extends IntentService {
      * @param requestType - string constant that helps us to distinguish what request it is
      * @param postEntity  - POST request entity (json string that must be sent on server)
      */
-
-    public static void start(Context context, String url, String postEntity, int requestType) {
+    public static void start(Context context, String url, String postEntity,
+                             int requestType) {
         Intent intent = new Intent(context, PLIntentService.class);
-        intent.putExtra(Extra.URL, url);
-        intent.putExtra(Extra.REQUEST_TYPE, requestType);
-        intent.putExtra(Extra.POST_ENTITY, postEntity);
+        intent.putExtra(Constant.Extra.URL, url);
+        intent.putExtra(Constant.Extra.REQUEST_TYPE, requestType);
+        intent.putExtra(Constant.Extra.POST_ENTITY, postEntity);
         context.startService(intent);
     }
 
-    public static void start(Context context, String url, int requestType) {
+    public static void start(Context context, String url,
+                             int requestType) {
         Intent intent = new Intent(context, PLIntentService.class);
-        intent.putExtra(Extra.URL, url);
-        intent.putExtra(Extra.REQUEST_TYPE, requestType);
+        intent.putExtra(Constant.Extra.URL, url);
+        intent.putExtra(Constant.Extra.REQUEST_TYPE, requestType);
         context.startService(intent);
     }
 
@@ -84,57 +76,59 @@ public class PLIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        String url = intent.getExtras().getString(Extra.URL);
-        String data = intent.getExtras().getString(Extra.POST_ENTITY);
-        int requestType = intent.getExtras().getInt(Extra.REQUEST_TYPE);
+        String url = intent.getExtras().getString(Constant.Extra.URL);
+        String data = intent.getExtras().getString(Constant.Extra.POST_ENTITY);
+        int requestType = intent.getExtras().getInt(Constant.Extra.REQUEST_TYPE);
         Log.i(LOG_TAG, requestType + Constant.Symbol.SPACE + url);
 
         HttpURLConnection connection;
 
         switch (requestType) {
-            case HttpRequestManager.RequestType.PRODUCT_LIST:
+            case Constant.RequestType.PRODUCT_LIST:
 
+                // calling API
                 connection = HttpRequestManager.executeRequest(
                         url,
-                        HttpRequestManager.RequestMethod.GET,
+                        Constant.RequestMethod.GET,
                         null
                 );
 
+                // parse API result to get json string
                 String jsonList = HttpResponseUtil.parseResponse(connection);
 
+                // deserialize json string to model
                 ProductResponse productResponse = new Gson().fromJson(jsonList, ProductResponse.class);
 
+                // check server data (null if something went wrong)
                 if (productResponse != null) {
 
-                    ArrayList<Product> products = productResponse.getProducts();
+                    // get all products
+                    ArrayList<Product> products = productResponse.getProductList();
 
-                    ArrayList<Product> oldProducts = PlQueryHandler.getProducts(getBaseContext());
-
-                    for (Product oldProduct : oldProducts) {
-                        for (Product newProduct : products) {
-
-                            if (oldProduct.getId() == newProduct.getId())
-                                newProduct.setFavorite(oldProduct.isFavorite());
-
+                    // restore favorites
+                    for (Product product : products) {
+                        if (Preference.getInstance(getApplicationContext()).
+                                getUserFavorites(String.valueOf(product.getId()))) {
+                            product.setFavorite(true);
                         }
                     }
 
+                    // add all products into db
                     PlQueryHandler.addProducts(this, products);
 
-                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, true));
+                    // post to UI
+                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, true, products));
 
                 } else {
                     BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, false));
-
                 }
 
                 break;
-
-            case HttpRequestManager.RequestType.PRODUCT_ITEM:
+            case Constant.RequestType.PRODUCT_ITEM:
 
                 connection = HttpRequestManager.executeRequest(
                         url,
-                        HttpRequestManager.RequestMethod.GET,
+                        Constant.RequestMethod.GET,
                         null
                 );
 
@@ -143,19 +137,14 @@ public class PLIntentService extends IntentService {
                 Product product = new Gson().fromJson(jsonItem, Product.class);
 
                 if (product != null) {
-
                     PlQueryHandler.updateProductDescription(this, product);
-
                     BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_ITEM_LOADED, true, product));
 
                 } else {
-                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_ITEM_LOADED, false));
+                    BusProvider.getInstance().post(new ApiEvent<>(ApiEvent.EventType.PRODUCT_LIST_LOADED, false));
                 }
-
                 break;
-
         }
-
     }
 
     // ===========================================================

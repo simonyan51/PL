@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/menu_product_edit"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/action_add_product"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/menu_product_done"
-        android:visible="false"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/action_add_product"
-        app:showAsAction="always"/>
 
     <item
+        android:id="@+id/menu_product_edit"
+        android:icon="@drawable/ic_edit_white"
+        android:title="@string/edit"
+        android:visible="false"
+
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_product_done"
+        android:icon="@drawable/ic_done_white"
+        android:title="@string/done"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_product_unfav"
-        android:icon="@android:drawable/star_off"
-        android:title="Unfav"
+        android:icon="@drawable/ic_unfavorite"
+        android:title="@string/unfavorite"
         android:visible="true"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_product_fav"
-        android:icon="@android:drawable/star_on"
-        android:title="Fav"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorite"
         android:visible="false"
         app:showAsAction="ifRoom" />
+
 </menu>

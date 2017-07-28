@@ -1,10 +1,7 @@
 package com.simonyan.pl.db.provider;
 
-import android.net.Uri;
 
-/**
- * Created by simonyan51 on 7/5/17.
- */
+import android.net.Uri;
 
 public class UriBuilder {
 

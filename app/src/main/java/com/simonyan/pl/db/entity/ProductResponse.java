@@ -4,28 +4,24 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-/**
- * Created by simonyan51 on 6/28/17.
- */
 
 public class ProductResponse {
 
     @SerializedName("products")
-    private ArrayList<Product> products;
+    private ArrayList<Product> productList;
 
     public ProductResponse() {
-
     }
 
-    public ProductResponse(ArrayList<Product> products) {
-        this.products = products;
+    public ProductResponse(ArrayList<Product> productList) {
+        this.productList = productList;
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
+    public ArrayList<Product> getProductList() {
+        return productList;
     }
 
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
+    public void setProductList(ArrayList<Product> productList) {
+        this.productList = productList;
     }
 }

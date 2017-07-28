@@ -1,5 +1,6 @@
 package com.simonyan.pl.db.handler;
 
+
 import android.content.Context;
 import android.database.Cursor;
 
@@ -10,10 +11,6 @@ import com.simonyan.pl.db.provider.UriBuilder;
 import com.simonyan.pl.util.AppUtil;
 
 import java.util.ArrayList;
-
-/**
- * Created by simonyan51 on 7/5/17.
- */
 
 public class PlQueryHandler {
 
@@ -65,10 +62,11 @@ public class PlQueryHandler {
         );
     }
 
+
     public synchronized static void updateProduct(Context context, Product product) {
         context.getContentResolver().update(
                 UriBuilder.buildProductUri(),
-                PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS),
+                PlDataBase.composeValues(product, PlDataBase.PRODUCT_TABLE),
                 PlDataBase.PRODUCT_ID + "=?",
                 new String[]{String.valueOf(product.getId())}
         );
@@ -81,17 +79,6 @@ public class PlQueryHandler {
                 PlDataBase.PRODUCT_ID + "=?",
                 new String[]{String.valueOf(product.getId())}
         );
-    }
-
-    public synchronized static void updateProducts(Context context, ArrayList<Product> products) {
-        for (Product product : products) {
-            context.getContentResolver().update(
-                    UriBuilder.buildProductUri(),
-                    PlDataBase.composeValues(product, PlDataBase.ContentValuesType.PRODUCTS),
-                    PlDataBase.PRODUCT_ID + "=?",
-                    new String[]{String.valueOf(product.getId())}
-            );
-        }
     }
 
     public synchronized static Product getProduct(Context context, long id) {
@@ -143,7 +130,7 @@ public class PlQueryHandler {
         return CursorReader.parseProducts(cursor);
     }
 
-    public synchronized static ArrayList<Product> getAllUserProducts(Context context) {
+    public synchronized static ArrayList<Product> getAllFromUSerProducts(Context context) {
         Cursor cursor = context.getContentResolver().query(
                 UriBuilder.buildProductUri(),
                 PlDataBase.Projection.PRODUCT,
@@ -153,6 +140,9 @@ public class PlQueryHandler {
         );
         return CursorReader.parseProducts(cursor);
     }
+
+
+
 
     // ===========================================================
     // Inner and Anonymous Classes

@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-
 public class Product implements Parcelable {
 
     @SerializedName("product_id")
@@ -25,19 +24,20 @@ public class Product implements Parcelable {
 
     private boolean isFavorite;
 
-    private boolean isUserProduct;
+    private boolean isFromUser;
 
     public Product() {
     }
 
-    public Product(long id, String name, long price, String image, String description, boolean isFavorite, boolean isUserProduct) {
+    public Product(long id, String name, long price, String image,
+                   String description, boolean isFavorite, boolean isFromUser) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.image = image;
         this.description = description;
         this.isFavorite = isFavorite;
-        this.isUserProduct = isUserProduct;
+        this.isFromUser = isFromUser;
     }
 
     public long getId() {
@@ -88,17 +88,14 @@ public class Product implements Parcelable {
         isFavorite = favorite;
     }
 
-    public boolean isUserProduct() {
-        return isUserProduct;
+    public boolean isFromUser() {
+        return isFromUser;
     }
 
-    public void setUserProduct(boolean userProduct) {
-        isUserProduct = userProduct;
+    public void setFromUser(boolean fromUser) {
+        isFromUser = fromUser;
     }
 
-    public static Creator<Product> getCREATOR() {
-        return CREATOR;
-    }
 
     @Override
     public int describeContents() {
@@ -113,6 +110,7 @@ public class Product implements Parcelable {
         dest.writeString(this.image);
         dest.writeString(this.description);
         dest.writeByte(this.isFavorite ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isFromUser ? (byte) 1 : (byte) 0);
     }
 
     protected Product(Parcel in) {
@@ -122,6 +120,7 @@ public class Product implements Parcelable {
         this.image = in.readString();
         this.description = in.readString();
         this.isFavorite = in.readByte() != 0;
+        this.isFromUser = in.readByte() != 0;
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {

@@ -9,23 +9,12 @@ import com.google.common.eventbus.EventBus;
 
 import java.util.concurrent.Executor;
 
-/**
- * Created by simonyan51 on 6/30/17.
- */
-
 
 public class BusProvider {
 
-    // ===========================================================
-    // Constants
-    // ===========================================================
-
-    // ===========================================================
-    // Fields
-    // ===========================================================
-
     private static final EventBus BUS = new AsyncEventBus(new Executor() {
         private Handler handler;
+
         @Override
         public void execute(@NonNull Runnable command) {
             if (handler == null) {
@@ -35,23 +24,12 @@ public class BusProvider {
         }
     });
 
-    // ===========================================================
-    // Constructors
-    // ===========================================================
-
     public static EventBus getInstance() {
         return BUS;
     }
+
     private BusProvider() {
     }
-
-    // ===========================================================
-    // Getter & Setter
-    // ===========================================================
-
-    // ===========================================================
-    // Methods for/from SuperClass/Interfaces
-    // ===========================================================
 
     public static void register(Object object) {
         BusProvider.getInstance().register(object);
@@ -64,9 +42,4 @@ public class BusProvider {
             e.printStackTrace();
         }
     }
-
-    // ===========================================================
-    // Inner and Anonymous Classes
-    // ===========================================================
-
 }

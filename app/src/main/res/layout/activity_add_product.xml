@@ -1,91 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.simonyan.pl.ui.activities.AddProductActivity">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:animateLayoutChanges="true"
+              android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/include_toolbar" />
+        <include layout="@layout/include_toolbar"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_activity_add_product_image"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="20dp"
-                android:background="@android:color/darker_gray"
-                android:scaleType="centerCrop" />
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="10dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/il_activity_add_product_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/et_activity_add_product_name"
+                <ImageView
+                    android:id="@+id/iv_product_add_logo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLength="25"
-                    android:maxLines="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:hint="@string/hint_product_name" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/darker_gray"
+                    android:scaleType="centerCrop"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/il_activity_add_product_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/et_activity_add_product_price"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="9"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:hint="@string/hint_product_price" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/il_activity_add_product_desc"
+                    <EditText
+                        android:id="@+id/edt_product_add_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:hint="@string/edt_product_add_name"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edt_product_add_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="@string/edt_product_add_price"
+                        android:inputType="number"
+                        android:maxLength="10"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/edt_product_add_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/edt_product_add_desc"
+                        android:inputType="textMultiLine"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_product_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp">
+                android:layout_marginTop="20dp"
+                android:background="#2E7D32"
+                android:text="@string/btn_product_add"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="@android:color/white"/>
 
-                <EditText
-                    android:id="@+id/et_activity_add_product_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_product_description"
-                    android:scrollbars="vertical" />
-            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
+
     </ScrollView>
 
-    <Button
-        android:id="@+id/btn_activity_add_product_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="@string/btn_text_add_product"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_green_dark" />
 </LinearLayout>
