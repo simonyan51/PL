@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,8 @@ import com.simonyan.pl.util.Constant;
 import java.util.ArrayList;
 
 public class FavoriteFragment extends BaseFragment implements View.OnClickListener,
-        PlAsyncQueryHandler.AsyncQueryListener, ProductAdapter.OnItemClickListener {
+        PlAsyncQueryHandler.AsyncQueryListener, ProductAdapter.OnItemClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     // ===========================================================
     // Constants
@@ -42,6 +44,7 @@ public class FavoriteFragment extends BaseFragment implements View.OnClickListen
     private ProductAdapter mProductAdapter;
     private ArrayList<Product> mProductList;
     private PlAsyncQueryHandler mPlAsyncQueryHandler;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     // ===========================================================
     // Constructors
@@ -112,6 +115,11 @@ public class FavoriteFragment extends BaseFragment implements View.OnClickListen
         mPlAsyncQueryHandler.deleteProduct(product, position);
     }
 
+    @Override
+    public void onRefresh() {
+        loadData();
+    }
+
     // ===========================================================
     // Other Listeners, methods for/from Interfaces
     // ===========================================================
@@ -131,6 +139,7 @@ public class FavoriteFragment extends BaseFragment implements View.OnClickListen
                 mProductList.clear();
                 mProductList.addAll(products);
                 mProductAdapter.notifyDataSetChanged();
+                mSwipeRefreshLayout.setRefreshing(false);
                 break;
         }
     }
@@ -162,10 +171,13 @@ public class FavoriteFragment extends BaseFragment implements View.OnClickListen
     // ===========================================================
 
     private void setListeners() {
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void findViews(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_fv_list);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sw_fragment_favorite);
     }
 
     private void loadData() {
@@ -174,7 +186,7 @@ public class FavoriteFragment extends BaseFragment implements View.OnClickListen
 
     private void init() {
         mPlAsyncQueryHandler = new PlAsyncQueryHandler(getActivity().getApplicationContext(), this);
-
+        getActivity().setTitle(getString(R.string.title_favorites));
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

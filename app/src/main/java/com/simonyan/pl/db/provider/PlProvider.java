@@ -10,8 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.compat.BuildConfig;
 
+import com.simonyan.pl.BuildConfig;
 import com.simonyan.pl.db.PlDataBase;
 import com.simonyan.pl.db.PlDataBaseHelper;
 
